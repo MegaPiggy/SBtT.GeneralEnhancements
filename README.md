@@ -1,6 +1,8 @@
 ## General Enhancements
 This mod adds a bunch of little things. You can toggle things to your liking in the settings.
 
+![General Enhancements](https://raw.githubusercontent.com/MegaPiggy/SBtT.GeneralEnhancements/main/_ModThumbnail_GE_v4.png)
+
 ## Mod Re-implementations
 - [Toggle Velocity Matching](https://outerwildsmods.com/mods/togglevelocitymatching/)* - Velocity matching can be left on, and it works with both the suit and ship (and notifications still work).
 - [Smooth Thrust](https://outerwildsmods.com/mods/owsmooththrust/)* - Keyboard users can now use the scroll-wheel to change the thrust level/throttle of the suit/ship and also walking speed.
