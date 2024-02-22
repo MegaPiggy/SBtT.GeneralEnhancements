@@ -1,0 +1,208 @@
+﻿using UnityEngine;
+
+namespace GeneralEnhancements
+{
+    public sealed class NotUglyDreamworldPlanet : Feature
+    {
+        GameObject atmoObj;
+        //GameObject fogObj;
+
+        static GameObject atmoRoot;
+        static Material atmoMat;
+
+        //static PlanetaryFogController fog;
+        //static Material fogMat;
+        //static Texture3D fogTexture;
+        //static Texture2D fogRampTexture;
+
+        int _propID_SunPosition, _propID_OWSunPositionRange, _propID_OWSunColorIntensity;
+        static Light planetSunLight;
+        static Transform sunLightPivot;
+        static Transform gasPlanetTF;
+
+        static SunLightParamUpdater sunLightParamUpdater;
+
+        static GameObject ambientLight;
+
+        float originalPlanetSunLightIntensity;
+
+        public NotUglyDreamworldPlanet()
+        {
+
+        }
+        public override void LateInitialize()
+        {
+            atmoRoot = null;
+
+            var atmoTH = GameObject.Find("TimberHearth_Body/Atmosphere_TH");
+            var gasPlanet = GameObject.Find("Sector_DreamWorld/Atmosphere_Dreamworld/Prefab_IP_VisiblePlanet");
+            if (atmoTH == null || gasPlanet == null) return;
+            gasPlanetTF = gasPlanet.transform;
+
+            sunLightParamUpdater = GameObject.Find("Sun_Body/Sector_SUN").GetComponentInChildren<SunLightParamUpdater>();
+
+            atmoRoot = Object.Instantiate(atmoTH);
+
+            atmoObj = atmoRoot.transform.Find("AtmoSphere").gameObject; //Can't be scaled
+            //fogObj = atmoRoot.transform.Find("FogSphere").gameObject; //Can be scaled
+            var planetPivot = gasPlanetTF.Find("VisiblePlanet_Pivot");
+            var rings = planetPivot.Find("Rings_IP_VisiblePlanet").GetComponent<MeshFilter>();
+            rings.sharedMesh = GEAssets.HomePlanetRing;
+            rings.GetComponent<MeshRenderer>().sharedMaterial.color = new Color(1.1f, 0.9f, 1f, 0.04f);
+            //Fix rings -> They used a clip shader but also didn't actually really use it?
+
+
+            float radius = 449.5f;
+            /*
+            fog = fogObj.GetComponent<PlanetaryFogController>();
+            var fogRndr = fogObj.GetComponent<Renderer>();
+            if (fogTexture == null)
+            {
+                fogTexture = fog.fogLookupTexture;
+                fogRampTexture = fog.fogColorRampTexture;
+            }
+            if (fogMat == null)
+            {
+                fogMat = fogRndr.material;
+                //fogMat.SetFloat("_Radius", radius);
+                //fogMat.SetFloat("_Density", 1f);
+                //fogMat.SetFloat("_DensityExp", 1f);
+            }
+            */
+            if (atmoMat == null)
+            {
+                atmoMat = atmoObj.GetComponentInChildren<Renderer>().material;
+                atmoMat.SetFloat("_InnerRadius", radius);
+                atmoMat.SetFloat("_OuterRadius", radius + 75f);
+            }
+
+            var renderers = atmoObj.GetComponentsInChildren<Renderer>(true);
+            foreach (var r in renderers)
+            {
+                r.GetComponent<MeshFilter>().sharedMesh = GEAssets.InvertedAtmosphere; //So appears on top
+                r.sharedMaterial = atmoMat;
+            }
+            //fogRndr.sharedMaterial = fogMat;
+
+            var atmoRootTF = atmoRoot.transform;
+            atmoRootTF.parent = gasPlanetTF;
+            atmoRootTF.localPosition = Vector3.zero;
+            atmoRootTF.localRotation = Quaternion.identity;
+            atmoRootTF.localScale = Vector3.one * 1.25f;
+            atmoRoot.SetActive(false);
+
+            gasPlanetTF.localPosition = new Vector3(-1600f, 1320f, 333f);
+            gasPlanetTF.localRotation = Quaternion.Euler(0f, 0f, 10f);
+
+            ambientLight = gasPlanetTF.Find("AmbientLight_IP").gameObject;
+            sunLightPivot = gasPlanetTF.Find("SunLightPivot");
+            sunLightPivot.localPosition = Vector3.zero;
+            sunLightPivot.localRotation = Quaternion.Euler(0f, 140f, 0f);
+            planetSunLight = sunLightPivot.Find("Directional light").GetComponent<Light>();
+            planetSunLight.transform.localPosition = new Vector3(0f, 0f, 1800f);
+            originalPlanetSunLightIntensity = planetSunLight.intensity;
+
+            _propID_SunPosition = Shader.PropertyToID("_SunPosition");
+            _propID_OWSunPositionRange = Shader.PropertyToID("_OWSunPositionRange");
+            _propID_OWSunColorIntensity = Shader.PropertyToID("_OWSunColorIntensity");
+
+            GlobalMessenger.RemoveListener("EnterDreamWorld", OnEnterDreamworld);
+            GlobalMessenger.AddListener("EnterDreamWorld", OnEnterDreamworld);
+
+            GlobalMessenger.RemoveListener("ExitDreamWorld", OnExitDreamworld);
+            GlobalMessenger.AddListener("ExitDreamWorld", OnExitDreamworld);
+        }
+        static void OnEnterDreamworld()
+        {
+            Log.Print("Enter Dreamworld");
+
+            bool active = Settings.NicerRingedPlanet;
+            if (atmoRoot != null) atmoRoot.SetActive(active);
+            if (ambientLight != null) ambientLight.SetActive(!active);
+            if (sunLightParamUpdater != null) sunLightParamUpdater.enabled = false;
+        }
+        static void OnExitDreamworld()
+        {
+            Log.Print("Exit Dreamworld");
+            bool active = Settings.NicerRingedPlanet;
+
+            if (atmoRoot != null) atmoRoot.SetActive(!active);
+            if (sunLightParamUpdater != null) sunLightParamUpdater.enabled = true;
+        }
+        public override void OnSettingsUpdate()
+        {
+            if (PlayerState.InDreamWorld())
+            {
+                OnEnterDreamworld();
+            }
+        }
+        public override void Update()
+        {
+            if (!PlayerState.InDreamWorld()) return;
+
+            /*
+            if (fog != null)
+            {
+                fog.transform.position = Locator.GetPlayerTransform().position;
+            }
+            */
+
+            var sectorsIn = Locator.GetPlayerSectorDetector()._sectorList;
+            foreach (var sector in sectorsIn)
+            {
+                string n = sector.name;
+                if (!n.Contains("DreamZone")) continue; //Joj Corbroc
+
+                if (n.Contains("1"))
+                {
+                    gasPlanetTF.localPosition = new Vector3(-1750f, 1320f, -400f);
+                    gasPlanetTF.localRotation = Quaternion.Euler(320f, 354f, 31f);
+                    break;
+                }
+                if (n.Contains("2"))
+                {
+                    gasPlanetTF.localPosition = new Vector3(2950f, 1320f, -685f);
+                    gasPlanetTF.localRotation = Quaternion.Euler(320f, 91f, 98f);
+                    break;
+                }
+                if (n.Contains("3"))
+                {
+                    gasPlanetTF.localPosition = new Vector3(-370f, 2080f, -390f);
+                    gasPlanetTF.localRotation = Quaternion.Euler(333f, 320f, 340f);
+                    break;
+                }
+                if (n.Contains("4"))
+                {
+                    gasPlanetTF.localPosition = new Vector3(-1880f, 1080f, 0f);
+                    gasPlanetTF.localRotation = Quaternion.Euler(270f, 37f, 0f);
+                    break;
+                }
+            }
+
+            if (planetSunLight != null)
+            {
+                var lightTF = planetSunLight.transform;
+                Vector3 dir = (lightTF.position - atmoRoot.transform.position).normalized;
+                Vector3 position = atmoRoot.transform.position + dir * 10000f;
+
+                float w = planetSunLight.range;
+			    float range = planetSunLight.range;
+                Color color = Color.white;
+                Shader.SetGlobalVector(_propID_SunPosition, new Vector4(position.x, position.y, position.z, w));
+                Shader.SetGlobalVector(_propID_OWSunPositionRange, new Vector4(position.x, position.y, position.z, 1f / (range * range)));
+                Shader.SetGlobalVector(_propID_OWSunColorIntensity, new Vector4(color.r, color.g, color.b, 1f));
+
+                lightTF.rotation = Quaternion.LookRotation(-dir);
+
+                planetSunLight.intensity = Settings.NicerRingedPlanet ? 3f : originalPlanetSunLightIntensity;
+                //planetSunLight.intensity = Settings.RingedPlanetBrightness; //Didn't darken atmosphere
+                planetSunLight.range = 2500f;
+                if (planetSunLight.type != LightType.Spot)
+                {
+                    planetSunLight.type = LightType.Spot;
+                    planetSunLight.spotAngle = 135f;
+                }
+            }
+        }
+    }
+}

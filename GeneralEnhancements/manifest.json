@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ow-mods/owml/master/schemas/manifest_schema.json",
+  "filename": "GeneralEnhancements.dll",
+  "author": "Streetlights Behind the Trees",
+  "name": "General Enhancements",
+  "uniqueName": "SBtT.GeneralEnhancements",
+  "version": "1.0.0",
+  "owmlVersion": "2.9.8",
+  "conflicts": [
+    "Vesper.ToggleVelocityMatching",
+    "TruAI.SmoothThrust",
+    "ilyabru.OWSpeedModifier",
+
+    "LivingFray.PowerFailure",
+    "Komodo.StrangerNightCycle",
+
+    "TheLoreExplorer.GreenJetpack",
+    "Yurtle.ToggleHUD",
+    "hearth1an.NoDotMod"
+  ]
+}

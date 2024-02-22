@@ -1,0 +1,89 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ow-mods/owml/master/schemas/config_schema.json",
+  "enabled": true,
+  "settings": {
+
+    "UI/HUD": {
+      "type": "separator"
+    },
+    "Resource Gauges": {
+      "type": "selector",
+      "value": "Recolored",
+      "options": [
+        "Disabled",
+        "Vanilla",
+        "Unused",
+        "Recolored"
+      ]
+    },
+    "Minimap": {
+      "type": "selector",
+      "value": "Advanced",
+      "options": [
+        "Disabled",
+        "Vanilla",
+        "Simple",
+        "Advanced"
+      ]
+    },
+    "Giants Deep Minimap Scale": {
+      "type": "slider",
+      "min": 1,
+      "max": 2,
+      "value": 1.2
+    },
+    "Gravity-Thruster Gauge": {
+      "type": "selector",
+      "value": "Merged",
+      "options": [
+        "Disabled",
+        "Vanilla",
+        "Merged"
+      ]
+    },
+    "Helmet": true,
+    "Helmet Effects": true,
+    "Reticule": true,
+    "Targeting": {
+      "type": "selector",
+      "value": "Smooth",
+      "options": [
+        "Disabled",
+        "Vanilla",
+        "Smooth"
+      ]
+    },
+
+    "General": {
+      "type": "separator"
+    },
+    "Title Variety": true,
+    "Blinking/Sleep Anywhere": {
+      "type": "selector",
+      "value": "Enabled",
+      "options": [
+        "Disabled",
+        "Blink_Only",
+        "Enabled"
+      ]
+    },
+    "Allow Throttle Scroll": true,
+    "Continuous Velocity Matching": true,
+    "Jetpack Color": {
+      "type": "selector",
+      "value": "Enabled",
+      "options": [
+        "Disabled",
+        "Enabled",
+        "Always_Green"
+      ]
+    },
+    "Giants Deep Dark Side": true,
+
+    "DLC": {
+      "type": "separator"
+    },
+    "Stranger Shutdown": true,
+    "Nicer Ringed Planet": true
+  }
+}
