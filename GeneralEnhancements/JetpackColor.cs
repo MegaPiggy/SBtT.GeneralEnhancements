@@ -22,6 +22,10 @@ namespace GeneralEnhancements
                 normalColor = thrusterMat.color;
                 greenColor = new Color(0f, 1f, 0.7f) * thrusterMat.color;
             }
+            else
+            {
+                thrusterMat.SetColor(propID_color, normalColor); //Fixed not resetting
+            }
         }
         public override void OnSettingsUpdate()
         {

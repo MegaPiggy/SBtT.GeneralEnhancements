@@ -107,6 +107,7 @@ namespace GeneralEnhancements
                     if (Keyboard.current[Key.B].wasPressedThisFrame || storeBlinkInput)
                     {
                         if (Settings.BlinkSleep == BlinkSleep.Disabled) return;
+                        if (PlayerState.OnQuantumMoon() && PlayerState.IsInsideShip()) return;
 
                         storeBlinkInput = false;
                         blinkTimer = 0f;

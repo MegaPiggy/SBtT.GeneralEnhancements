@@ -37,6 +37,7 @@ namespace GeneralEnhancements
         Transform sandColumnAshTwin;
         SandLevelController sandAT, sandET, lavaHL;
         //SandFunnelController sandFunnel;
+        Transform sandColumnScaleRoot;
 
         (TornadoController, Transform)[] tornadoMapRings;
         Transform northTornadoTF;
@@ -164,18 +165,20 @@ namespace GeneralEnhancements
             errorMapNames.Add("QuantumMoon_Body");
             errorMapNames.Add("EyeOfTheUniverse_Body");
 
+            //var all = Object.FindObjectsOfType<OWRigidbody>(); //Temp
+            //foreach (var owRB in all) Log.Success(owRB.name);
+
             IsReady = true;
             foreach (var proxy in proxies)
             {
                 string n = proxy.name;
                 if (!n.Contains("(Clone)")) continue;
 
-                //Log.Print(n);
                 if (n.Contains("WhiteHole"))
                 {
                     Clone(ref WhiteHole, proxy);
                     whiteHole = WhiteHole.GetComponentInChildren<ProxyWhiteHole>();
-                    var map = new MinimapPlanetInfo("WhiteHole", WhiteHole, 0.002f, 250f, 0f);
+                    var map = new MinimapPlanetInfo("WhiteHole_Body", WhiteHole, 0.002f, 250f, 0f);
                     map.aboveMarkerMultiplier = 0f;
                     map.uvLightUp = 0f;
                     mapList.Add(map);
@@ -186,20 +189,20 @@ namespace GeneralEnhancements
                     THMoon = TimberHearth.GetComponentInChildren<ProxyOrbiter>(true).gameObject;
                     MoveProxyToMap(THMoon);
 
-                    mapList.Add(new MinimapPlanetInfo("TimberHearth", TimberHearth, 0.002f, 254f, 185f));
+                    mapList.Add(new MinimapPlanetInfo("TimberHearth_Body", TimberHearth, 0.002f, 254f, 185f));
                     var map = new MinimapPlanetInfo("Moon_Body", THMoon, 0.0062f, 80f, 0f); map.uvLightUp = 0f; mapList.Add(map);
                 }
                 if (n.Contains("DarkBramble"))
                 {
                     Clone(ref DarkBramble, proxy);
-                    var map = new MinimapPlanetInfo("DarkBramble", DarkBramble, 0.0007f, 710f, 0f);
+                    var map = new MinimapPlanetInfo("DarkBramble_Body", DarkBramble, 0.0007f, 710f, 0f);
                     map.uvLightUp = -0.3f; map.aboveMarkerMultiplier = 0f;
                     mapList.Add(map);
                 }
                 if (n.Contains("Comet"))
                 {
                     Clone(ref Comet, proxy);
-                    var map = new MinimapPlanetInfo("Comet", Comet, 0.0061f, 83f, 75f); map.uvLightUp = -0.5f; mapList.Add(map);
+                    var map = new MinimapPlanetInfo("Comet_Body", Comet, 0.0061f, 83f, 75f); map.uvLightUp = -0.5f; mapList.Add(map);
                 }
                 if (n.Contains("BrittleHollow"))
                 {
@@ -207,26 +210,27 @@ namespace GeneralEnhancements
                     BHMoon = BrittleHollow.GetComponentInChildren<ProxyOrbiter>(true).gameObject;
                     proxyBH = BrittleHollow.GetComponentInChildren<ProxyBrittleHollow>();
                     MoveProxyToMap(BHMoon);
-                    var map = new MinimapPlanetInfo("BrittleHollow", BrittleHollow, 0.00185f, 272f, 245f); map.uvLightUp = 1f; mapList.Add(map);
+                    var map = new MinimapPlanetInfo("BrittleHollow_Body", BrittleHollow, 0.00185f, 272f, 245f); map.uvLightUp = 1f; mapList.Add(map);
                     mapList.Add(new MinimapPlanetInfo("VolcanicMoon_Body", BHMoon, 0.0052f, 97f, 0f, true));
                 }
                 if (n.Contains("EmberTwin"))
                 {
                     Clone(ref EmberTwin, proxy);
-                    mapList.Add(new MinimapPlanetInfo("CaveTwin", EmberTwin, 0.003f, 170f, 120f, true));
+                    mapList.Add(new MinimapPlanetInfo("CaveTwin_Body", EmberTwin, 0.003f, 170f, 120f, true));
                 }
                 if (n.Contains("AshTwin"))
                 {
                     Clone(ref AshTwin, proxy);
                     sandColumnAshTwin = AshTwin.transform.Find("SandColumnRoot");
-                    mapList.Add(new MinimapPlanetInfo("TowerTwin", AshTwin, 0.003f, 170f, 30f, true));
+                    mapList.Add(new MinimapPlanetInfo("TowerTwin_Body", AshTwin, 0.003f, 170f, 30f, true));
+                    sandColumnScaleRoot = GameObject.Find("SandFunnel_Body/ScaleRoot").transform;
                 }
                 if (n.Contains("GiantsDeep"))
                 {
                     GiantsDeepRoot = new GameObject("GiantsDeep_Manual");
                     MoveProxyToMap(GiantsDeepRoot);
                     //OrbitalProbeCannon_Pivot ?
-                    mapList.Add(new MinimapPlanetInfo("GiantsDeep", GiantsDeepRoot, 0.00103f, -1f, -1f, true));
+                    mapList.Add(new MinimapPlanetInfo("GiantsDeep_Body", GiantsDeepRoot, 0.00103f, -1f, -1f, true));
                 }
             }
 
@@ -490,10 +494,12 @@ namespace GeneralEnhancements
                 current = planet;
                 ShowCurrent();
             }
+            /*
             if (planet != null && planet.name.Contains("_QM"))
             {
                 Log.Print("QM Ruleset");
             }
+            */
         }
 
         void HandleMarkersAndTrail(float undergroundRadius, float aboveMarkerRadius = 0.6f)
@@ -620,6 +626,7 @@ namespace GeneralEnhancements
                 Vector3 vec = (sandET.transform.position - sandAT.transform.position);
                 Quaternion rot = Quaternion.LookRotation(vec, sandAT.transform.up);
                 sandColumnAshTwin.localRotation = Quaternion.Euler(0f, 90f, 0f) * sandAT.transform.InverseTransformRotation(rot);
+                sandColumnAshTwin.localScale = sandColumnScaleRoot.localScale;
             }
             if (mapRoot == EmberTwin)
             {
@@ -686,14 +693,16 @@ namespace GeneralEnhancements
                 }
             }
 
-            foreach (var map in mapList) //Check for exact match first (e.g. Moon_Body -> VolcanicMoon_Body)
+            foreach (var map in mapList)
             {
                 if (n == map.owrbName) return map;
             }
-            foreach (var map in mapList)
+            /*
+            foreach (var map in mapList)    //Removed, using exact names now to not mess up NH
             {
                 if (n.Contains(map.owrbName)) return map;
             }
+            */
 
             return null;
         }

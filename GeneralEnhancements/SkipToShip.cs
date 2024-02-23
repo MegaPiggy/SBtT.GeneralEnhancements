@@ -20,9 +20,11 @@ namespace GeneralEnhancements
             prompt = new ScreenPrompt(InputLibrary.interact, "", 5, ScreenPrompt.DisplayState.Normal, true);
             Locator.GetPromptManager().AddScreenPrompt(prompt, PromptPosition.UpperRight);
         }
+
         public override void Update()
         {
-            if (TimeLoop.GetLoopCount() < 2) return;
+            if (TimeLoop.GetLoopCount() < 4) return;    //Changed from 2 to 4 to stop able to skip initial Slate dialogue
+            if (PlayerState.InConversation()) { prompt.SetVisibility(false); return; }   //Fixed funny skipping while talking
 
             if (beenToShip)
             {

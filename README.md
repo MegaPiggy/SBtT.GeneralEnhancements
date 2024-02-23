@@ -37,5 +37,5 @@ You might still be able to use them if you disable stuff in this mod's settings 
 - [Images](https://imgur.com/a/GUV0ZOo) - No Spoilers
 - [Images](https://imgur.com/a/TxW3zfD) - Spoilers!
 - [Camera Shake](https://outerwildsmods.com/mods/camerashake/) - my other mod that adds camera shake to make certain events more impactful. Try it out maybe.
-- [Streetlights Behind the Trees](https://www.youtube.com/@Sapphire12367) - main programmer, until v1.0.0
+- [Streetlights Behind the Trees](https://www.youtube.com/@Sapphire12367) - main programmer, until v1.0.1
 - MegaPiggy - mod uploader/current programmer
