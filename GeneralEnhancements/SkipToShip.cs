@@ -7,6 +7,8 @@ namespace GeneralEnhancements
 {
     public sealed class SkipToShip : Feature
     {
+        PlayerCameraEffectController cameraEffectController;
+
         bool beenToShip;
         bool beenToStranger;
         float skipCharge;
@@ -17,6 +19,8 @@ namespace GeneralEnhancements
         }
         public override void LateInitialize()
         {
+            cameraEffectController = Object.FindObjectOfType<PlayerCameraEffectController>();
+
             prompt = new ScreenPrompt(InputLibrary.interact, "", 5, ScreenPrompt.DisplayState.Normal, true);
             Locator.GetPromptManager().AddScreenPrompt(prompt, PromptPosition.UpperRight);
         }
@@ -77,6 +81,9 @@ namespace GeneralEnhancements
                 var suit = ship.GetComponentInChildren<SuitPickupVolume>();
                 suit.OnPressInteract(InputLibrary.interact);
                 OnGoToShip();
+
+                cameraEffectController.CloseEyes(0f);
+                cameraEffectController.OpenEyes(ManualBlinking.openEyesDuration);
             }
         }
         
@@ -125,6 +132,9 @@ namespace GeneralEnhancements
                 Locator.GetPlayerAudioController().PlayPlayerSingularityTransit();
 
                 OnGoToStranger();
+
+                cameraEffectController.CloseEyes(0f);
+                cameraEffectController.OpenEyes(ManualBlinking.openEyesDuration);
             }
         }
 

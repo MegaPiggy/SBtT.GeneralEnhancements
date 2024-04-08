@@ -656,6 +656,8 @@ namespace GeneralEnhancements
             var rb = current.GetAttachedOWRigidbody();
 
             minimapProxy = GetMinimapProxyBody(rb);
+            sphereTF.localScale = sphereDefaultScale; //1.0.2 - Moved from after if - fix for Sand Twins -> Astral Codec
+
             if (minimapProxy == null)
             {
                 Log.Print($"No map found for {rb.name}");
@@ -665,7 +667,6 @@ namespace GeneralEnhancements
 
             float scale = minimapProxy.miniMapScale;
             mapRoot.transform.localScale = new Vector3(-scale, -scale, scale); //flipped x and y for some reason
-            sphereTF.localScale = sphereDefaultScale;
             minimap._globeMeshTransform.localScale = mapRootDefaultScale;
             mapRoot.SetActive(true);
             currentRenderers = mapRoot.GetComponentsInChildren<MeshRenderer>();
@@ -680,13 +681,13 @@ namespace GeneralEnhancements
         bool errorMap;
         MinimapPlanetInfo GetMinimapProxyBody(OWRigidbody rb)
         {
-            string n = rb.name;
-            Log.Print($"Get map for {n}");
+            string rbName = rb.name;
+            Log.Print($"Get map for {rbName}");
 
             errorMap = false;
             foreach (var errorMapName in errorMapNames)
             {
-                if (rb.name == errorMapName)
+                if (rbName == errorMapName)
                 {
                     errorMap = true;
                     return null;
@@ -695,7 +696,7 @@ namespace GeneralEnhancements
 
             foreach (var map in mapList)
             {
-                if (n == map.owrbName) return map;
+                if (rbName == map.owrbName) return map;
             }
             /*
             foreach (var map in mapList)    //Removed, using exact names now to not mess up NH

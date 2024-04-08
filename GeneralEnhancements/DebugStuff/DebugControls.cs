@@ -51,7 +51,7 @@ namespace GeneralEnhancements.DebugStuff
                 resources._currentOxygen = PlayerResources._maxOxygen;
                 resources._currentHealth = PlayerResources._maxHealth;
             }
-            if (GetKeyDown(Key.F5)) ExplodeShip();
+            //if (GetKeyDown(Key.F5)) ExplodeShip();
             if (GetKeyDown(Key.Delete)) CollapseBrittleHollow();
             if (GetKeyDown(Key.F9)) TeleportToVesselWithAdvancedWarpCore();
         }

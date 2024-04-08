@@ -20,11 +20,14 @@ namespace GeneralEnhancements
         static Transform sunLightPivot;
         static Transform gasPlanetTF;
 
-        static SunLightParamUpdater sunLightParamUpdater;
+        static SunLightParamUpdater[] sunLightParamUpdaters;
+        static bool[] enabledStates;
 
         static GameObject ambientLight;
 
         float originalPlanetSunLightIntensity;
+        Vector3 originalPlanetPosition;
+        Quaternion originalPlanetRotation;
 
         public NotUglyDreamworldPlanet()
         {
@@ -39,7 +42,13 @@ namespace GeneralEnhancements
             if (atmoTH == null || gasPlanet == null) return;
             gasPlanetTF = gasPlanet.transform;
 
-            sunLightParamUpdater = GameObject.Find("Sun_Body/Sector_SUN").GetComponentInChildren<SunLightParamUpdater>();
+            originalPlanetPosition = gasPlanetTF.localPosition;
+            originalPlanetRotation = gasPlanetTF.localRotation;
+
+            sunLightParamUpdaters = GameObject.FindObjectsOfType<SunLightParamUpdater>();
+            enabledStates = new bool[sunLightParamUpdaters.Length];
+
+            Log.Print($"Updaters LI: {sunLightParamUpdaters.Length}");
 
             atmoRoot = Object.Instantiate(atmoTH);
 
@@ -119,7 +128,15 @@ namespace GeneralEnhancements
             bool active = Settings.NicerRingedPlanet;
             if (atmoRoot != null) atmoRoot.SetActive(active);
             if (ambientLight != null) ambientLight.SetActive(!active);
-            if (sunLightParamUpdater != null) sunLightParamUpdater.enabled = false;
+            if (sunLightParamUpdaters != null) {
+                for (int i = 0; i < sunLightParamUpdaters.Length; i++)
+                {
+                    if (sunLightParamUpdaters[i] != null) {
+                        enabledStates[i] = sunLightParamUpdaters[i].enabled;
+                        sunLightParamUpdaters[i].enabled = false;
+                    }
+                }
+            }
         }
         static void OnExitDreamworld()
         {
@@ -127,8 +144,16 @@ namespace GeneralEnhancements
             bool active = Settings.NicerRingedPlanet;
 
             if (atmoRoot != null) atmoRoot.SetActive(!active);
-            if (sunLightParamUpdater != null) sunLightParamUpdater.enabled = true;
+            if (sunLightParamUpdaters != null) {
+                for (int i = 0; i < sunLightParamUpdaters.Length; i++)
+                {
+                    if (sunLightParamUpdaters[i] != null) {
+                        sunLightParamUpdaters[i].enabled = enabledStates[i];
+                    }
+                }
+            }
         }
+
         public override void OnSettingsUpdate()
         {
             if (PlayerState.InDreamWorld())
@@ -147,36 +172,45 @@ namespace GeneralEnhancements
             }
             */
 
-            var sectorsIn = Locator.GetPlayerSectorDetector()._sectorList;
-            foreach (var sector in sectorsIn)
+            if (Settings.NicerRingedPlanet)
             {
-                string n = sector.name;
-                if (!n.Contains("DreamZone")) continue; //Joj Corbroc
 
-                if (n.Contains("1"))
+                var sectorsIn = Locator.GetPlayerSectorDetector()._sectorList;
+                foreach (var sector in sectorsIn)
                 {
-                    gasPlanetTF.localPosition = new Vector3(-1750f, 1320f, -400f);
-                    gasPlanetTF.localRotation = Quaternion.Euler(320f, 354f, 31f);
-                    break;
+                    string n = sector.name;
+                    if (!n.Contains("DreamZone")) continue; //Joj Corbroc
+
+                    if (n.Contains("1"))
+                    {
+                        gasPlanetTF.localPosition = new Vector3(-1750f, 1320f, -400f);
+                        gasPlanetTF.localRotation = Quaternion.Euler(320f, 354f, 31f);
+                        break;
+                    }
+                    if (n.Contains("2"))
+                    {
+                        gasPlanetTF.localPosition = new Vector3(2950f, 1320f, -685f);
+                        gasPlanetTF.localRotation = Quaternion.Euler(320f, 91f, 98f);
+                        break;
+                    }
+                    if (n.Contains("3"))
+                    {
+                        gasPlanetTF.localPosition = new Vector3(-370f, 2080f, -390f);
+                        gasPlanetTF.localRotation = Quaternion.Euler(333f, 320f, 340f);
+                        break;
+                    }
+                    if (n.Contains("4"))
+                    {
+                        gasPlanetTF.localPosition = new Vector3(-1880f, 1080f, 0f);
+                        gasPlanetTF.localRotation = Quaternion.Euler(270f, 37f, 0f);
+                        break;
+                    }
                 }
-                if (n.Contains("2"))
-                {
-                    gasPlanetTF.localPosition = new Vector3(2950f, 1320f, -685f);
-                    gasPlanetTF.localRotation = Quaternion.Euler(320f, 91f, 98f);
-                    break;
-                }
-                if (n.Contains("3"))
-                {
-                    gasPlanetTF.localPosition = new Vector3(-370f, 2080f, -390f);
-                    gasPlanetTF.localRotation = Quaternion.Euler(333f, 320f, 340f);
-                    break;
-                }
-                if (n.Contains("4"))
-                {
-                    gasPlanetTF.localPosition = new Vector3(-1880f, 1080f, 0f);
-                    gasPlanetTF.localRotation = Quaternion.Euler(270f, 37f, 0f);
-                    break;
-                }
+            }
+            else
+            {
+                gasPlanetTF.localPosition = originalPlanetPosition;
+                gasPlanetTF.localRotation = originalPlanetRotation;
             }
 
             if (planetSunLight != null)

@@ -13,7 +13,7 @@ This mod adds a bunch of little things. You can toggle things to your liking in 
 You might still be able to use them if you disable stuff in this mod's settings if you really want.
 
 ## Actions
-- Blinking - press the [B] key to blink, as an alternative to opening and closing the map, spinning in circles or toggling your flashlight.
+- Blinking - press the [B] key to blink, as an alternative to opening and closing the map, spinning in circles or toggling your flashlight. Gamepad: Left Shoulder button when not holding anything/when not piloting the ship.
 - Sleep Anywhere - If you hold the blink button down, you can hold your eyes shut, and if you do this for a few seconds, you will accelerate time just like at a campfire. Unlike a campfire, you are not guarenteed safety, so be careful where and when you do this.
 
 ## HUD

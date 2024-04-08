@@ -25,12 +25,11 @@ namespace GeneralEnhancements
         Vector3 startingLocalPos;
         Quaternion startingRot;
         TitleScreenAnimation titleAnimator;
+        GameObject riebeck;
         public TitleScreenVariation()
         {
             //NH can mess with title screen, so check Riebeck is still there
-            var riebeck = GameObject.Find("Traveller_HEA_Riebeck (1)");
-            if (riebeck == null) return; //(ModCompatibility.hasNH)
-            if (!riebeck.activeSelf) return;
+            riebeck = GameObject.Find("Traveller_HEA_Riebeck (1)");
 
             optionsObj = GameObject.Find("TitleMenu/OptionsCanvas/OptionsMenu-Panel");
 
@@ -75,6 +74,9 @@ namespace GeneralEnhancements
             {
                 return;
             }
+            if (riebeck == null) return;
+            if (!riebeck.activeInHierarchy) return; //Riebeck deactivated, assume NH changed planet.
+
             //if (finished) return;
             if (camera == null) return;
             if (titleAnimator._animator == null) return;

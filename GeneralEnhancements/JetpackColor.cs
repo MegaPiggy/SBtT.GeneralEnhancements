@@ -8,6 +8,7 @@ namespace GeneralEnhancements
         static PlayerResources resources;
         static Material thrusterMat;
         static Color normalColor;
+        //static Color colorO2Thrust;
         static Color greenColor;
         static int propID_color;
         public JetpackColor()
@@ -16,15 +17,23 @@ namespace GeneralEnhancements
             resources = Object.FindObjectOfType<PlayerResources>();
             propID_color = Shader.PropertyToID("_Color");
 
+
             if (thrusterMat == null)
             {
-                thrusterMat = resources._jetpackFlameColorSwapper._thrusterRenderers[0].sharedMaterial;
+                //Make jetpack new mat so ship color doesn't change.
+                thrusterMat = resources._jetpackFlameColorSwapper._thrusterRenderers[0].material;
                 normalColor = thrusterMat.color;
                 greenColor = new Color(0f, 1f, 0.7f) * thrusterMat.color;
+                //colorO2Thrust = new Color(0f, 1f, 0.7f) * thrusterMat.color;
             }
             else
             {
                 thrusterMat.SetColor(propID_color, normalColor); //Fixed not resetting
+            }
+
+            foreach (var item in resources._jetpackFlameColorSwapper._thrusterRenderers)
+            {
+                item.sharedMaterial = thrusterMat;
             }
         }
         public override void OnSettingsUpdate()
@@ -79,10 +88,35 @@ namespace GeneralEnhancements
                 thrusterMat.SetColor(propID_color, color);
             }
 
-            if (greenFuel < 0f || resources._usingOxygenAsPropellant)
+            if (greenFuel < 0f)
             {
                 greenFuel = 0f;
+
+                var swapper = resources._jetpackFlameColorSwapper;
+                for (int l = 0; l < swapper._thrusterLights.Length; l++)
+                {
+                    swapper._thrusterLights[l].color = swapper._baseLightColor;
+                }
                 thrusterMat.SetColor(propID_color, normalColor);
+
+                /*
+                if (resources._usingOxygenAsPropellant)
+                {
+                    Log.Success("O2");
+
+                    var colorO2Light = swapper._baseLightColor * 0.5f;
+                    for (int l = 0; l < swapper._thrusterLights.Length; l++) {
+                        swapper._thrusterLights[l].color = colorO2Light;
+                    }
+                    thrusterMat.SetColor(propID_color, colorO2Thrust);
+                }
+                else
+                {
+                    Log.Success("Normal");
+
+
+                }
+                */
             }
         }
     }

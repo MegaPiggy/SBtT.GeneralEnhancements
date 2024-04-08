@@ -54,8 +54,8 @@ namespace GeneralEnhancements
             else allQMSockets = new List<QuantumSocket[]>();
         }
 
-        const float closeEyesDuration = 0.05f;
-        const float openEyesDuration = 0.45f;
+        public const float closeEyesDuration = 0.05f;
+        public const float openEyesDuration = 0.45f;
         float blinkTimer;
         public enum BlinkState { Not, Blinking, WaitForRelease, Unblinking, ForwardingTime }
         BlinkState state;
@@ -89,6 +89,30 @@ namespace GeneralEnhancements
             }
         }
 
+        bool StartBlink()
+        {
+            if (PlayerState.UsingShipComputer()) return false;
+            if (OWInput.UsingGamepad())
+            {
+                if (Locator.GetToolModeSwapper().GetToolMode() != ToolMode.None || OWInput.IsInputMode(InputMode.ShipCockpit)) {
+                    return false;
+                }
+                return Gamepad.current.leftShoulder.wasPressedThisFrame;
+            }
+            return Keyboard.current[Key.B].wasPressedThisFrame;
+        }
+        bool ContinueBlink()
+        {
+            if (PlayerState.UsingShipComputer()) return false;
+            if (OWInput.UsingGamepad())
+            {
+                if (Locator.GetToolModeSwapper().GetToolMode() != ToolMode.None || OWInput.IsInputMode(InputMode.ShipCockpit)) {
+                    return false;
+                }
+                return Gamepad.current.leftShoulder.isPressed;
+            }
+            return Keyboard.current[Key.B].isPressed;
+        }
         public override void Update()
         {
             if (alarmStartTime > 0f)
@@ -104,7 +128,7 @@ namespace GeneralEnhancements
             {
                 case BlinkState.Not:
 
-                    if (Keyboard.current[Key.B].wasPressedThisFrame || storeBlinkInput)
+                    if (StartBlink() || storeBlinkInput)
                     {
                         if (Settings.BlinkSleep == BlinkSleep.Disabled) return;
                         if (PlayerState.OnQuantumMoon() && PlayerState.IsInsideShip()) return;
@@ -156,7 +180,7 @@ namespace GeneralEnhancements
                         forceWakeUp = false;
                         state = BlinkState.ForwardingTime;
                     }
-                    else if (!Keyboard.current[Key.B].isPressed)
+                    else if (!ContinueBlink())
                     {
                         blinkTimer = 0f;
                         state = BlinkState.Unblinking;
@@ -169,7 +193,7 @@ namespace GeneralEnhancements
                     {
                         state = BlinkState.Not;
                     }
-                    if (Keyboard.current[Key.B].wasPressedThisFrame) storeBlinkInput = true;
+                    if (StartBlink()) storeBlinkInput = true;
                     break;
 
                 case BlinkState.ForwardingTime:
