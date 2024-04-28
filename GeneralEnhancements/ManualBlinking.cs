@@ -92,26 +92,34 @@ namespace GeneralEnhancements
         bool StartBlink()
         {
             if (PlayerState.UsingShipComputer()) return false;
+
+            if (Keyboard.current[Key.B].wasPressedThisFrame) return true; //Allow keyboard with gamepad
             if (OWInput.UsingGamepad())
             {
+                if (PlayerState.InZeroG()) return false;
                 if (Locator.GetToolModeSwapper().GetToolMode() != ToolMode.None || OWInput.IsInputMode(InputMode.ShipCockpit)) {
                     return false;
                 }
-                return Gamepad.current.leftShoulder.wasPressedThisFrame;
+                return OWInput.IsNewlyPressed(InputLibrary.rollMode);
+                //return Gamepad.current.leftShoulder.wasPressedThisFrame;
             }
-            return Keyboard.current[Key.B].wasPressedThisFrame;
+            return false;
         }
         bool ContinueBlink()
         {
             if (PlayerState.UsingShipComputer()) return false;
+
+            if (Keyboard.current[Key.B].isPressed) return true; //Allow keyboard with gamepad
             if (OWInput.UsingGamepad())
             {
+                if (PlayerState.InZeroG()) return false;
                 if (Locator.GetToolModeSwapper().GetToolMode() != ToolMode.None || OWInput.IsInputMode(InputMode.ShipCockpit)) {
                     return false;
                 }
-                return Gamepad.current.leftShoulder.isPressed;
+                return OWInput.IsPressed(InputLibrary.rollMode);
+                //return Gamepad.current.leftShoulder.isPressed;
             }
-            return Keyboard.current[Key.B].isPressed;
+            return false;
         }
         public override void Update()
         {
