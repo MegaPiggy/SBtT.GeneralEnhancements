@@ -36,9 +36,9 @@ namespace GeneralEnhancements
                     return "Saltar al Astronave";
                 case Language.TURKISH:
                     return "Gemi'a geç";
+                default:
+                    return "Skip to Ship";
             }
-
-            return "Skip to Ship";
         }
         public static string SkipToStranger()
         {
@@ -66,9 +66,9 @@ namespace GeneralEnhancements
                     return "Saltar al Forastero";
                 case Language.TURKISH:
                     return "Yabancı'a geç";
+                default:
+                    return "Skip to Stranger";
             }
-
-            return "Skip to Stranger";
         }
     }
 }
