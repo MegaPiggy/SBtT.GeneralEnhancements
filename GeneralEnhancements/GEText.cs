@@ -36,12 +36,19 @@ namespace GeneralEnhancements
                     return "Saltar al Astronave";
                 case Language.TURKISH:
                     return "Gemi'a geç";
-                case Language.CZECH:
-                    return "Zrychlit na Loď";
-                case Language.ICELANDIC:
-                    return "Sleppa í Skip";
                 default:
-                    return "Skip to Ship";
+                    if (language.ToString() == "Íslenska")
+                    {
+                        return "Sleppa í Skip";
+                    }
+                    else if (language.ToString() == "Czech")
+                    {
+                        return "Zrychlit na Loď";
+                    }
+                    else
+                    {
+                        return "Skip to Ship";
+                    }
             }
         }
         public static string SkipToStranger()
@@ -70,12 +77,19 @@ namespace GeneralEnhancements
                     return "Saltar al Forastero";
                 case Language.TURKISH:
                     return "Yabancı'a geç";
-                case Language.CZECH:
-                    return "Zrychlit na Cizinec";
-                case Language.ICELANDIC:
-                    return "Sleppa í Gesturinn";
                 default:
-                    return "Skip to Stranger";
+                    if (language.ToString() == "Íslenska")
+                    {
+                        return "Sleppa í Gesturinn";
+                    }
+                    else if (language.ToString() == "Czech")
+                    {
+                        return "Zrychlit na Cizinec";
+                    }
+                    else
+                    {
+                        return "Skip to Stranger";
+                    }
             }
         }
     }
