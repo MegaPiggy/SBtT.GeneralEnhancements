@@ -36,6 +36,10 @@ namespace GeneralEnhancements
                     return "Saltar al Astronave";
                 case Language.TURKISH:
                     return "Gemi'a geç";
+                case Language.CZECH:
+                    return "Zrychlit na Loď";
+                case Language.ICELANDIC:
+                    return "Sleppa í Skip";
                 default:
                     return "Skip to Ship";
             }
@@ -66,6 +70,10 @@ namespace GeneralEnhancements
                     return "Saltar al Forastero";
                 case Language.TURKISH:
                     return "Yabancı'a geç";
+                case Language.CZECH:
+                    return "Zrychlit na Cizinec";
+                case Language.ICELANDIC:
+                    return "Sleppa í Gesturinn";
                 default:
                     return "Skip to Stranger";
             }
