@@ -37,7 +37,18 @@ namespace GeneralEnhancements
                 case Language.TURKISH:
                     return "Gemi'a geç";
                 default:
-                    return "Skip to Ship";
+                    if (language.ToString() == "Íslenska")
+                    {
+                        return "Sleppa í Skip";
+                    }
+                    else if (language.ToString() == "Czech")
+                    {
+                        return "Zrychlit na Loď";
+                    }
+                    else
+                    {
+                        return "Skip to Ship";
+                    }
             }
         }
         public static string SkipToStranger()
@@ -67,7 +78,18 @@ namespace GeneralEnhancements
                 case Language.TURKISH:
                     return "Yabancı'a geç";
                 default:
-                    return "Skip to Stranger";
+                    if (language.ToString() == "Íslenska")
+                    {
+                        return "Sleppa í Gesturinn";
+                    }
+                    else if (language.ToString() == "Czech")
+                    {
+                        return "Zrychlit na Cizinec";
+                    }
+                    else
+                    {
+                        return "Skip to Stranger";
+                    }
             }
         }
     }
