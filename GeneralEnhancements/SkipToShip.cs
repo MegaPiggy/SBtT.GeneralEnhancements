@@ -62,7 +62,7 @@ namespace GeneralEnhancements
             //Weirdness if try to skip when in elevator.
             if (PlayerState.IsInsideShip() || PlayerState.IsAttached() || Time.timeSinceLevelLoad > 30f) { OnGoToShip(); return; }
 
-            prompt.SetVisibility(true);
+            prompt.SetVisibility(Settings.SkipToPrompts);
             prompt.SetText(GEText.SkipToShip() + "<CMD>" + UITextLibrary.GetString(UITextType.HoldPrompt));
 
             SkipCharge();
@@ -97,7 +97,7 @@ namespace GeneralEnhancements
                 return;
             }
 
-            prompt.SetVisibility(true);
+            prompt.SetVisibility(Settings.SkipToPrompts);
             prompt.SetText(GEText.SkipToStranger() + "<CMD>" + UITextLibrary.GetString(UITextType.HoldPrompt));
 
             SkipCharge();
