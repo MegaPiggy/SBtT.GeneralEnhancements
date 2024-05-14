@@ -91,7 +91,7 @@ namespace GeneralEnhancements
         {
             if (Locator.GetRingWorldController() == null) return;
             if (PlayerState.InCloakingField() || Time.timeSinceLevelLoad > 120f) { OnGoToStranger(); return; }
-            if (!PlayerState.IsInsideShip() || ShipLogEntryHUDMarker.s_entryLocation == null || ShipLogEntryHUDMarker.s_entryLocation.name != "IP_RING_WORLD")
+            if (!PlayerState.IsInsideShip() || ShipLogEntryHUDMarker.s_entryLocation == null || !ShipLogEntryHUDMarker.s_entryLocation.name.StartsWith("IP_"))
             {
                 prompt.SetVisibility(false);
                 return;
