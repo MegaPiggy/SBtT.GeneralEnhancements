@@ -43,6 +43,8 @@ namespace GeneralEnhancements
                             return "Zrychlit na Loď";
                         case "Íslenska":
                             return "Sleppa í Skip";
+                        case "Andalûh":
+                            return "Çartâh al Âttronabe";
                         default:
                             return "Skip to Ship";
                     }
@@ -81,6 +83,8 @@ namespace GeneralEnhancements
                             return "Zrychlit na Cizinec";
                         case "Íslenska":
                             return "Sleppa í Gesturinn";
+                        case "Andalûh":
+                            return "Çartâh ar Forâttero";
                         default:
                             return "Skip to Stranger";
                     }
