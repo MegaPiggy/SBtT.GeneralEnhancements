@@ -37,17 +37,14 @@ namespace GeneralEnhancements
                 case Language.TURKISH:
                     return "Gemi'a geç";
                 default:
-                    if (language.ToString() == "Íslenska")
+                    switch (language.ToString())
                     {
-                        return "Sleppa í Skip";
-                    }
-                    else if (language.ToString() == "Czech")
-                    {
-                        return "Zrychlit na Loď";
-                    }
-                    else
-                    {
-                        return "Skip to Ship";
+                        case "Czech":
+                            return "Zrychlit na Loď";
+                        case "Íslenska":
+                            return "Sleppa í Skip";
+                        default:
+                            return "Skip to Ship";
                     }
             }
         }
@@ -78,17 +75,14 @@ namespace GeneralEnhancements
                 case Language.TURKISH:
                     return "Yabancı'a geç";
                 default:
-                    if (language.ToString() == "Íslenska")
+                    switch (language.ToString())
                     {
-                        return "Sleppa í Gesturinn";
-                    }
-                    else if (language.ToString() == "Czech")
-                    {
-                        return "Zrychlit na Cizinec";
-                    }
-                    else
-                    {
-                        return "Skip to Stranger";
+                        case "Czech":
+                            return "Zrychlit na Cizinec";
+                        case "Íslenska":
+                            return "Sleppa í Gesturinn";
+                        default:
+                            return "Skip to Stranger";
                     }
             }
         }
