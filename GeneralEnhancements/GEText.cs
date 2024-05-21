@@ -37,17 +37,18 @@ namespace GeneralEnhancements
                 case Language.TURKISH:
                     return "Gemi'a geç";
                 default:
-                    if (language.ToString() == "Íslenska")
+                    switch (language.ToString())
                     {
-                        return "Sleppa í Skip";
-                    }
-                    else if (language.ToString() == "Czech")
-                    {
-                        return "Zrychlit na Loď";
-                    }
-                    else
-                    {
-                        return "Skip to Ship";
+                        case "Íslenska":
+                            return "Sleppa í Skip";
+                        case "Czech":
+                            return "Zrychlit na Loď";
+                        case "Andalûh":
+                            return "Çartâh al Âttronabe";
+                        case "Euskara":
+                            return "Saltatu ontzira";
+                        default:
+                            return "Skip to Ship";
                     }
             }
         }
@@ -78,17 +79,18 @@ namespace GeneralEnhancements
                 case Language.TURKISH:
                     return "Yabancı'a geç";
                 default:
-                    if (language.ToString() == "Íslenska")
+                    switch (language.ToString())
                     {
-                        return "Sleppa í Gesturinn";
-                    }
-                    else if (language.ToString() == "Czech")
-                    {
-                        return "Zrychlit na Cizinec";
-                    }
-                    else
-                    {
-                        return "Skip to Stranger";
+                        case "Íslenska":
+                            return "Sleppa í Gesturinn";
+                        case "Czech":
+                            return "Zrychlit na Cizinec";
+                        case "Andalûh":
+                            return "Çartâh ar Forâttero";
+                        case "Euskara":
+                            return "Saltatu kanpotarrarengana";
+                        default:
+                            return "Skip to Stranger";
                     }
             }
         }
