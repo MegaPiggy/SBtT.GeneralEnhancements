@@ -53,6 +53,7 @@
         "Smooth"
       ]
     },
+    "Skip To Prompts": true,
 
     "General": {
       "type": "separator"

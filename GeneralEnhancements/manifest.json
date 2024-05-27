@@ -1,10 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/ow-mods/owml/master/schemas/manifest_schema.json",
   "filename": "GeneralEnhancements.dll",
-  "author": "Streetlights Behind the Trees",
+  "author": "Streetlights Behind the Trees & MegaPiggy",
   "name": "General Enhancements",
   "uniqueName": "SBtT.GeneralEnhancements",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "owmlVersion": "2.9.8",
   "conflicts": [
     "Vesper.ToggleVelocityMatching",

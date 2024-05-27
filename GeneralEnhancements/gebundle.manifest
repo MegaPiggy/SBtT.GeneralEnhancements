@@ -1,0 +1,43 @@
+ManifestFileVersion: 0
+CRC: 595963481
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 7b78b4c50a5e1e6572d27d3278a70099
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 07353491aca6e6a29636b555171f2e48
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/General Enhancements Mod/Arrow.prefab
+- Assets/General Enhancements Mod/GE_Minimap_Shader.mat
+- Assets/General Enhancements Mod/HUD_Minimap_Surface.png
+- Assets/General Enhancements Mod/Cylinder_Inverted.prefab
+- Assets/General Enhancements Mod/Ring.prefab
+- Assets/General Enhancements Mod/ProxyHurricane.prefab
+- Assets/General Enhancements Mod/GE_Minimap_Shader.shader
+- Assets/General Enhancements Mod/Sphere_NoUVs_Inverted.prefab
+- Assets/General Enhancements Mod/ProxyTornado.prefab
+- Assets/General Enhancements Mod/Sphere_NoUVs.prefab
+- Assets/General Enhancements Mod/PlanetRing.prefab
+- Assets/General Enhancements Mod/Atmosphere_Inverted.prefab
+- Assets/General Enhancements Mod/Ring_Thin.prefab
+Dependencies: []

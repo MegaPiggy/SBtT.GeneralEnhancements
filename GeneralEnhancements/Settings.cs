@@ -22,6 +22,7 @@ namespace GeneralEnhancements
         public static bool HelmetEffects { get; private set; }
         public static bool Reticule { get; private set; }
         public static Targeting Targeting { get; private set; }
+        public static bool SkipToPrompts { get; private set; }
 
         public static bool TitleVariety { get; private set; }
         public static BlinkSleep BlinkSleep { get; private set; }
@@ -45,6 +46,7 @@ namespace GeneralEnhancements
             HelmetEffects = config.GetSettingsValue<bool>("Helmet Effects");
             Reticule = config.GetSettingsValue<bool>("Reticule");
             Targeting = config.GetSettingsValue<Targeting>("Targeting");
+            SkipToPrompts = config.GetSettingsValue<bool>("Skip To Prompts");
 
             TitleVariety = config.GetSettingsValue<bool>("Title Variety");
             BlinkSleep = config.GetSettingsValue<BlinkSleep>("Blinking/Sleep Anywhere");

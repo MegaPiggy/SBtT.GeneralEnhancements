@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 env:
-  PROJ_USERNAME: StreetlightsBehindtheTrees
+  PROJ_USERNAME: SBtT
   PROJ_NAME: GeneralEnhancements
 
 jobs:

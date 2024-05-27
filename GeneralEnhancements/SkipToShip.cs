@@ -62,7 +62,7 @@ namespace GeneralEnhancements
             //Weirdness if try to skip when in elevator.
             if (PlayerState.IsInsideShip() || PlayerState.IsAttached() || Time.timeSinceLevelLoad > 30f) { OnGoToShip(); return; }
 
-            prompt.SetVisibility(true);
+            prompt.SetVisibility(Settings.SkipToPrompts);
             prompt.SetText(GEText.SkipToShip() + "<CMD>" + UITextLibrary.GetString(UITextType.HoldPrompt));
 
             SkipCharge();
@@ -91,13 +91,13 @@ namespace GeneralEnhancements
         {
             if (Locator.GetRingWorldController() == null) return;
             if (PlayerState.InCloakingField() || Time.timeSinceLevelLoad > 120f) { OnGoToStranger(); return; }
-            if (!PlayerState.IsInsideShip() || ShipLogEntryHUDMarker.s_entryLocation == null || ShipLogEntryHUDMarker.s_entryLocation.name != "IP_RING_WORLD")
+            if (!PlayerState.IsInsideShip() || ShipLogEntryHUDMarker.s_entryLocation == null || !ShipLogEntryHUDMarker.s_entryLocation.name.StartsWith("IP_"))
             {
                 prompt.SetVisibility(false);
                 return;
             }
 
-            prompt.SetVisibility(true);
+            prompt.SetVisibility(Settings.SkipToPrompts);
             prompt.SetText(GEText.SkipToStranger() + "<CMD>" + UITextLibrary.GetString(UITextType.HoldPrompt));
 
             SkipCharge();

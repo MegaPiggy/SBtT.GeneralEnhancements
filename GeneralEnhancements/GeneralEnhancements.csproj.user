@@ -1,5 +1,5 @@
 ﻿<Project>
   <PropertyGroup>
-    <OutputPath>$(AppData)\OuterWildsModManager\OWML\Mods\StreetlightsBehindtheTrees.GeneralEnhancements</OutputPath>
+    <OutputPath>$(AppData)\OuterWildsModManager\OWML\Mods\SBtT.GeneralEnhancements</OutputPath>
   </PropertyGroup>
 </Project>
