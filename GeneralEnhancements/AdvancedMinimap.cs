@@ -249,24 +249,28 @@ namespace GeneralEnhancements
                     GDQuantumIsland = qi.transform;
                     GDQuantumTower = GDQuantumIsland.Find("Proxy_GD_QuantumTower").gameObject;
                 }
-
-                var tornadoes = Object.FindObjectsOfType<TornadoController>();
-                tornadoMapRings = new (TornadoController, Transform)[tornadoes.Length];
-                for (int i = 0; i < tornadoes.Length; i++)
+                
+                var actualGD = GameObject.Find("GiantsDeep_Body");
+                if (actualGD != null)
                 {
-                    var obj = Object.Instantiate(GEAssets.ProxyTornado);
-                    var tf = obj.transform;
-                    tf.parent = GiantsDeepRoot.transform;
-                    tf.localScale = Vector3.one;
-
-                    var rndrs = obj.GetComponentsInChildren<MeshRenderer>();
-                    foreach (var rndr in rndrs)
+                    var tornadoes = actualGD.GetComponentsInChildren<TornadoController>(true);
+                    tornadoMapRings = new (TornadoController, Transform)[tornadoes.Length];
+                    for (int i = 0; i < tornadoes.Length; i++)
                     {
-                        rndr.sharedMaterial = GEAssets.MinimapMat;
-                        rndr.gameObject.layer = layerHUD;
-                    }
+                        var obj = Object.Instantiate(GEAssets.ProxyTornado);
+                        var tf = obj.transform;
+                        tf.parent = GiantsDeepRoot.transform;
+                        tf.localScale = Vector3.one;
 
-                    tornadoMapRings[i] = (tornadoes[i], tf);
+                        var rndrs = obj.GetComponentsInChildren<MeshRenderer>();
+                        foreach (var rndr in rndrs)
+                        {
+                            rndr.sharedMaterial = GEAssets.MinimapMat;
+                            rndr.gameObject.layer = layerHUD;
+                        }
+
+                        tornadoMapRings[i] = (tornadoes[i], tf);
+                    }
                 }
 
                 var northTornado = Object.Instantiate(GEAssets.ProxyHurricane);
