@@ -45,6 +45,8 @@ namespace GeneralEnhancements
                             return "Sleppa í Skip";
                         case "Andalûh":
                             return "Çartâh al Âttronabe";
+                        case "Euskara":
+                            return "Saltatu ontzira";
                         default:
                             return "Skip to Ship";
                     }
@@ -85,6 +87,8 @@ namespace GeneralEnhancements
                             return "Sleppa í Gesturinn";
                         case "Andalûh":
                             return "Çartâh ar Forâttero";
+                        case "Euskara":
+                            return "Saltatu kanpotarrarengana";
                         default:
                             return "Skip to Stranger";
                     }
