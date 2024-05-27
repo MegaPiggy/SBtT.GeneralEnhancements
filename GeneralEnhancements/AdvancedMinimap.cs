@@ -582,13 +582,19 @@ namespace GeneralEnhancements
                     island.miniMapProxy.localRotation = gd.InverseTransformRotation(island.originalProxy.rotation);
                     island.miniMapProxy.localScale = new Vector3(t, t, t);
                 }
-                foreach (var tornado in tornadoMapRings)
-                {
-                    var root = tornado.Item1._tornadoRoot;
-                    tornado.Item2.gameObject.SetActive(root.activeSelf);
 
-                    tornado.Item2.localPosition = gd.InverseTransformPoint(root.transform.position);
-                    tornado.Item2.localRotation = gd.InverseTransformRotation(root.transform.rotation) * Quaternion.Euler(0f, Time.timeSinceLevelLoad * 60f, 0f);
+                if (tornadoMapRings != null)
+                {
+                    foreach (var tornado in tornadoMapRings)
+                    {
+                        var controller = tornado.Item1;
+                        var root = controller._tornadoRoot;
+                        var map = tornado.Item2;
+                        map.gameObject.SetActive(root.activeInHierarchy);
+
+                        map.localPosition = gd.InverseTransformPoint(root.transform.position);
+                        map.localRotation = gd.InverseTransformRotation(root.transform.rotation) * Quaternion.Euler(0f, Time.timeSinceLevelLoad * 60f, 0f);
+                    }
                 }
 
                 northTornadoTF.localRotation = Quaternion.Euler(0f, Time.timeSinceLevelLoad * 30f, 0f);
