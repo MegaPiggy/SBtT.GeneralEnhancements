@@ -19,15 +19,25 @@ namespace GeneralEnhancements
         static Light planetSunLight;
         static Transform sunLightPivot;
         static Transform gasPlanetTF;
+        static MeshFilter rings;
 
         static SunLightParamUpdater[] sunLightParamUpdaters;
         static bool[] enabledStates;
 
         static GameObject ambientLight;
 
-        float originalPlanetSunLightIntensity;
         Vector3 originalPlanetPosition;
         Quaternion originalPlanetRotation;
+        Vector3 originalSunLightPivotPosition;
+        Quaternion originalSunLightPivotRotation;
+        Vector3 originalPlanetSunLightPosition;
+        Quaternion originalPlanetSunLightRotation;
+        float originalPlanetSunLightIntensity;
+        float originalPlanetSunLightRange;
+        private LightType originalPlanetSunLightType;
+        private float originalPlanetSunLightSpotAngle;
+        static Mesh originalRingsMesh;
+        static Color originalRingsColor;
 
         public NotUglyDreamworldPlanet()
         {
@@ -55,9 +65,9 @@ namespace GeneralEnhancements
             atmoObj = atmoRoot.transform.Find("AtmoSphere").gameObject; //Can't be scaled
             //fogObj = atmoRoot.transform.Find("FogSphere").gameObject; //Can be scaled
             var planetPivot = gasPlanetTF.Find("VisiblePlanet_Pivot");
-            var rings = planetPivot.Find("Rings_IP_VisiblePlanet").GetComponent<MeshFilter>();
-            rings.sharedMesh = GEAssets.HomePlanetRing;
-            rings.GetComponent<MeshRenderer>().sharedMaterial.color = new Color(1.1f, 0.9f, 1f, 0.04f);
+            rings = planetPivot.Find("Rings_IP_VisiblePlanet").GetComponent<MeshFilter>();
+            originalRingsMesh = rings.sharedMesh;
+            originalRingsColor = rings.GetComponent<MeshRenderer>().sharedMaterial.color;
             //Fix rings -> They used a clip shader but also didn't actually really use it?
 
 
@@ -105,11 +115,18 @@ namespace GeneralEnhancements
 
             ambientLight = gasPlanetTF.Find("AmbientLight_IP").gameObject;
             sunLightPivot = gasPlanetTF.Find("SunLightPivot");
+            originalSunLightPivotPosition = sunLightPivot.localPosition;
+            originalSunLightPivotRotation = sunLightPivot.localRotation;
             sunLightPivot.localPosition = Vector3.zero;
             sunLightPivot.localRotation = Quaternion.Euler(0f, 140f, 0f);
             planetSunLight = sunLightPivot.Find("Directional light").GetComponent<Light>();
+            originalPlanetSunLightPosition = planetSunLight.transform.localPosition;
+            originalPlanetSunLightRotation = planetSunLight.transform.localRotation;
             planetSunLight.transform.localPosition = new Vector3(0f, 0f, 1800f);
             originalPlanetSunLightIntensity = planetSunLight.intensity;
+            originalPlanetSunLightRange = planetSunLight.range;
+            originalPlanetSunLightType = planetSunLight.type;
+            originalPlanetSunLightSpotAngle = planetSunLight.spotAngle;
 
             _propID_SunPosition = Shader.PropertyToID("_SunPosition");
             _propID_OWSunPositionRange = Shader.PropertyToID("_OWSunPositionRange");
@@ -133,7 +150,7 @@ namespace GeneralEnhancements
                 {
                     if (sunLightParamUpdaters[i] != null) {
                         enabledStates[i] = sunLightParamUpdaters[i].enabled;
-                        sunLightParamUpdaters[i].enabled = false;
+                        sunLightParamUpdaters[i].enabled = !active;
                     }
                 }
             }
@@ -174,7 +191,6 @@ namespace GeneralEnhancements
 
             if (Settings.NicerRingedPlanet)
             {
-
                 var sectorsIn = Locator.GetPlayerSectorDetector()._sectorList;
                 foreach (var sector in sectorsIn)
                 {
@@ -213,28 +229,69 @@ namespace GeneralEnhancements
                 gasPlanetTF.localRotation = originalPlanetRotation;
             }
 
+            if (sunLightPivot != null)
+            {
+                if (Settings.NicerRingedPlanet)
+                {
+                    sunLightPivot.localPosition = Vector3.zero;
+                    sunLightPivot.localRotation = Quaternion.Euler(0f, 140f, 0f);
+                }
+                else
+                {
+                    sunLightPivot.localPosition = originalSunLightPivotPosition;
+                    sunLightPivot.localRotation = originalSunLightPivotRotation;
+                }
+            }
+
+            if (rings != null)
+            {
+                if (Settings.NicerRingedPlanet)
+                {
+                    rings.sharedMesh = GEAssets.HomePlanetRing;
+                    rings.GetComponent<MeshRenderer>().sharedMaterial.color = new Color(1.1f, 0.9f, 1f, 0.04f);
+                }
+                else
+                {
+                    rings.sharedMesh = originalRingsMesh;
+                    rings.GetComponent<MeshRenderer>().sharedMaterial.color = originalRingsColor;
+                }
+            }
+
             if (planetSunLight != null)
             {
-                var lightTF = planetSunLight.transform;
-                Vector3 dir = (lightTF.position - atmoRoot.transform.position).normalized;
-                Vector3 position = atmoRoot.transform.position + dir * 10000f;
-
-                float w = planetSunLight.range;
-			    float range = planetSunLight.range;
-                Color color = Color.white;
-                Shader.SetGlobalVector(_propID_SunPosition, new Vector4(position.x, position.y, position.z, w));
-                Shader.SetGlobalVector(_propID_OWSunPositionRange, new Vector4(position.x, position.y, position.z, 1f / (range * range)));
-                Shader.SetGlobalVector(_propID_OWSunColorIntensity, new Vector4(color.r, color.g, color.b, 1f));
-
-                lightTF.rotation = Quaternion.LookRotation(-dir);
-
-                planetSunLight.intensity = Settings.NicerRingedPlanet ? 3f : originalPlanetSunLightIntensity;
-                //planetSunLight.intensity = Settings.RingedPlanetBrightness; //Didn't darken atmosphere
-                planetSunLight.range = 2500f;
-                if (planetSunLight.type != LightType.Spot)
+                if (Settings.NicerRingedPlanet)
                 {
-                    planetSunLight.type = LightType.Spot;
-                    planetSunLight.spotAngle = 135f;
+                    planetSunLight.transform.localPosition = new Vector3(0f, 0f, 1800f);
+                    var lightTF = planetSunLight.transform;
+                    Vector3 dir = (lightTF.position - atmoRoot.transform.position).normalized;
+                    Vector3 position = atmoRoot.transform.position + dir * 10000f;
+
+                    float w = planetSunLight.range;
+                    float range = planetSunLight.range;
+                    Color color = Color.white;
+                    Shader.SetGlobalVector(_propID_SunPosition, new Vector4(position.x, position.y, position.z, w));
+                    Shader.SetGlobalVector(_propID_OWSunPositionRange, new Vector4(position.x, position.y, position.z, 1f / (range * range)));
+                    Shader.SetGlobalVector(_propID_OWSunColorIntensity, new Vector4(color.r, color.g, color.b, 1f));
+
+                    lightTF.rotation = Quaternion.LookRotation(-dir);
+
+                    planetSunLight.intensity = 3f;
+                    //planetSunLight.intensity = Settings.RingedPlanetBrightness; //Didn't darken atmosphere
+                    planetSunLight.range = 2500f;
+                    if (planetSunLight.type != LightType.Spot)
+                    {
+                        planetSunLight.type = LightType.Spot;
+                        planetSunLight.spotAngle = 135f;
+                    }
+                }
+                else
+                {
+                    planetSunLight.transform.localPosition = originalPlanetSunLightPosition;
+                    planetSunLight.transform.localRotation = originalPlanetSunLightRotation;
+                    planetSunLight.intensity = originalPlanetSunLightIntensity;
+                    planetSunLight.range = originalPlanetSunLightRange;
+                    planetSunLight.type = originalPlanetSunLightType;
+                    planetSunLight.spotAngle = originalPlanetSunLightSpotAngle;
                 }
             }
         }
