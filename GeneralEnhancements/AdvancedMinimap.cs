@@ -187,6 +187,8 @@ namespace GeneralEnhancements
                 {
                     Clone(ref TimberHearth, proxy);
                     THMoon = TimberHearth.GetComponentInChildren<ProxyOrbiter>(true).gameObject;
+                    Object.DestroyImmediate(THMoon.GetComponent<ProxyOrbiter>());
+                    THMoon.name = "TimberMoon";
                     MoveProxyToMap(THMoon);
 
                     mapList.Add(new MinimapPlanetInfo("TimberHearth_Body", TimberHearth, 0.002f, 254f, 185f));
@@ -208,6 +210,8 @@ namespace GeneralEnhancements
                 {
                     Clone(ref BrittleHollow, proxy);
                     BHMoon = BrittleHollow.GetComponentInChildren<ProxyOrbiter>(true).gameObject;
+                    Object.DestroyImmediate(BHMoon.GetComponent<ProxyOrbiter>());
+                    BHMoon.name = "VolcanicMoon";
                     proxyBH = BrittleHollow.GetComponentInChildren<ProxyBrittleHollow>();
                     MoveProxyToMap(BHMoon);
                     var map = new MinimapPlanetInfo("BrittleHollow_Body", BrittleHollow, 0.00185f, 272f, 245f); map.uvLightUp = 1f; mapList.Add(map);
@@ -376,8 +380,13 @@ namespace GeneralEnhancements
 
         void Clone(ref GameObject field, ProxyBody toClone)
         {
+            toClone.gameObject.SetActive(false);
             field = Object.Instantiate(toClone.gameObject);
+            field.name = field.name.Replace("_DistantProxy", "").Replace("(Clone)", "");
+            Object.DestroyImmediate(field.GetComponent<ProxyBody>());
+            field.gameObject.SetActive(true);
             MoveProxyToMap(field);
+            toClone.gameObject.SetActive(true);
         }
         GameObject GetIslandProxyForMap(string path, string actualIslandPath)
         {
