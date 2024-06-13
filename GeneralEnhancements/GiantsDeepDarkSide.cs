@@ -39,6 +39,11 @@ namespace GeneralEnhancements
         {
             if (Locator._giantsDeep == null) return;
             if (Locator.GetSunTransform() == null) return;
+            if (ambientLight == null)
+            {
+                ambientLight = GameObject.Find("GiantsDeep_Body/AmbientLight_GD").GetComponent<Light>();
+                if (ambientLight == null) return;
+            }
 
             if (!PlayerState.InGiantsDeep() || !Settings.GiantsDeepDarkSide)
             {

@@ -450,6 +450,8 @@ namespace GeneralEnhancements
 
         public override void Update()
         {
+            if (playerMarker == null) return;
+
             playerMarker.gameObject.SetActive(Settings.Minimap != MinimapSetting.Vanilla);
             if (Settings.Minimap == MinimapSetting.Vanilla)
             {
@@ -613,28 +615,35 @@ namespace GeneralEnhancements
             {
                 var bh = Locator._brittleHollow.transform;
                 var wh = Locator._whiteHole.transform;
-                foreach (var f in fragments)
+                if (fragments != null)
                 {
-                    if (f.detached || f.warped) f._initialized = false;
-
-                    var fTF = f.transform;
-                    if (!f.detached) continue;
-
-                    var realObj = f._realObjectTransform;
-                    if (f.warped)
+                    foreach (var f in fragments)
                     {
-                        foreach (var r in f._renderers) r.enabled = true;
+                        if (f.detached || f.warped) f._initialized = false;
 
-                        fTF.localPosition = wh.InverseTransformPoint(realObj.position);
-                        fTF.localRotation = wh.InverseTransformRotation(realObj.rotation);
-                        fTF.localScale = realObj.lossyScale;
+                        var fTF = f.transform;
+                        if (!f.detached) continue;
+
+                        var realObj = f._realObjectTransform;
+                        if (f.warped)
+                        {
+                            foreach (var r in f._renderers) r.enabled = true;
+
+                            fTF.localPosition = wh.InverseTransformPoint(realObj.position);
+                            fTF.localRotation = wh.InverseTransformRotation(realObj.rotation);
+                            fTF.localScale = realObj.lossyScale;
+                        }
+                        else
+                        {
+                            fTF.localPosition = bh.InverseTransformPoint(realObj.position);
+                            fTF.localRotation = bh.InverseTransformRotation(realObj.rotation);
+                            fTF.localScale = realObj.lossyScale;
+                        }
                     }
-                    else
-                    {
-                        fTF.localPosition = bh.InverseTransformPoint(realObj.position);
-                        fTF.localRotation = bh.InverseTransformRotation(realObj.rotation);
-                        fTF.localScale = realObj.lossyScale;
-                    }
+                }
+                else
+                {
+                    Log.Error("Brittle Hollow Fragments missing from Minimap");
                 }
             }
 

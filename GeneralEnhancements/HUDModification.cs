@@ -192,12 +192,12 @@ namespace GeneralEnhancements
         }
         public override void Update()
         {
-            if (signalscope.IsEquipped())
+            if (signalscope != null && signalscope.IsEquipped())
             {
                 UpdateSignalscopeColors();
             }
 
-            if (healthNumber.gameObject.activeSelf)
+            if (healthNumber != null && healthNumber.gameObject.activeSelf)
             {
                 healthNumber.text = Mathf.Max(0f, resources.GetHealth()).ToString("F1");
                 float t = (resources.GetHealthFraction() - 0.2f) * 1.25f;
