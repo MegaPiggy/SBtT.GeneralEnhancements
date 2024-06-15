@@ -158,9 +158,8 @@ namespace GeneralEnhancements
         static void OnExitDreamworld()
         {
             Log.Print("Exit Dreamworld");
-            bool active = Settings.NicerRingedPlanet;
 
-            if (atmoRoot != null) atmoRoot.SetActive(!active);
+            if (atmoRoot != null) atmoRoot.SetActive(false);
             if (sunLightParamUpdaters != null) {
                 for (int i = 0; i < sunLightParamUpdaters.Length; i++)
                 {
