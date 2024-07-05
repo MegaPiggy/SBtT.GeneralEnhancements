@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -57,7 +58,7 @@ namespace GeneralEnhancements
 
         GameObject errorText;
 
-        ProxyBrittleHollowFragment[] fragments;
+        MinimapBrittleHollowFragment[] fragments;
 
         ParticleSystemRenderer playerParticles;
         static float originalMaxParticleSize;
@@ -158,8 +159,8 @@ namespace GeneralEnhancements
             proxies = Object.FindObjectsOfType<ProxyBody>();
             //proxyClones = new List<ProxyBody>();
 
-            ProxyWhiteHole whiteHole = null;
-            ProxyBrittleHollow proxyBH = null;
+            MinimapWhiteHole whiteHole = null;
+            MinimapBrittleHollow brittleHollow = null;
             mapList = new List<MinimapPlanetInfo>();
             errorMapNames = new List<string>();
             errorMapNames.Add("QuantumMoon_Body");
@@ -176,8 +177,7 @@ namespace GeneralEnhancements
 
                 if (n.Contains("WhiteHole"))
                 {
-                    Clone(ref WhiteHole, proxy);
-                    whiteHole = WhiteHole.GetComponentInChildren<ProxyWhiteHole>();
+                    whiteHole = Clone<MinimapWhiteHole>(ref WhiteHole, proxy);
                     var map = new MinimapPlanetInfo("WhiteHole_Body", WhiteHole, 0.002f, 250f, 0f);
                     map.aboveMarkerMultiplier = 0f;
                     map.uvLightUp = 0f;
@@ -208,11 +208,20 @@ namespace GeneralEnhancements
                 }
                 if (n.Contains("BrittleHollow"))
                 {
-                    Clone(ref BrittleHollow, proxy);
+                    brittleHollow = Clone<MinimapBrittleHollow>(ref BrittleHollow, proxy);
                     BHMoon = BrittleHollow.GetComponentInChildren<ProxyOrbiter>(true).gameObject;
                     Object.DestroyImmediate(BHMoon.GetComponent<ProxyOrbiter>());
                     BHMoon.name = "VolcanicMoon";
-                    proxyBH = BrittleHollow.GetComponentInChildren<ProxyBrittleHollow>();
+                    var fragmentObjs = new List<MinimapBrittleHollowFragment>();
+                    foreach (var fragment in BrittleHollow.GetComponentsInChildren<ProxyBrittleHollowFragment>(true))
+                    {
+                        var fragmentObj = fragment.gameObject.AddComponent<MinimapBrittleHollowFragment>();
+                        fragmentObj.Initialize(fragment);
+                        Object.DestroyImmediate(fragment);
+                        fragmentObjs.Add(fragmentObj);
+                    }
+                    fragments = fragmentObjs.ToArray();
+
                     MoveProxyToMap(BHMoon);
                     var map = new MinimapPlanetInfo("BrittleHollow_Body", BrittleHollow, 0.00185f, 272f, 245f); map.uvLightUp = 1f; mapList.Add(map);
                     mapList.Add(new MinimapPlanetInfo("VolcanicMoon_Body", BHMoon, 0.0052f, 97f, 0f, true));
@@ -288,16 +297,26 @@ namespace GeneralEnhancements
                 northTornadoRndr.sharedMaterial = GEAssets.MinimapMat;
             }
 
-            if (whiteHole != null && proxyBH != null)
+            if (brittleHollow != null)
             {
-                proxyBH.AssignBrittleHollowReference();
-                proxyBH.AssignWhiteHoleReference(whiteHole);
-                fragments = proxyBH._fragments;
-                //Log.Print($"Fragments: {fragments.Length}");
+                var actualBH = GameObject.Find("BrittleHollow_Body");
+                if (actualBH != null)
+                {
+                    brittleHollow.realObject = actualBH;
+                    brittleHollow.fragments = fragments;
+                    brittleHollow.ResolveFragments();
+                }
+            }
 
+            if (whiteHole != null)
+            {
                 var actualWH = GameObject.Find("WhiteHole_Body");
                 if (actualWH != null)
                 {
+                    whiteHole.realObject = actualWH;
+                    whiteHole.fragments = fragments;
+                    whiteHole.ResolveFragments();
+
                     //WhiteholeStation_Body
                     // /RFVolume_WhiteholeStation
                     void CreateWHProxy(GameObject obj)
@@ -388,6 +407,21 @@ namespace GeneralEnhancements
             MoveProxyToMap(field);
             toClone.gameObject.SetActive(true);
         }
+
+        T Clone<T>(ref GameObject field, ProxyBody toClone) where T : MinimapObject
+        {
+            toClone.gameObject.SetActive(false);
+            field = Object.Instantiate(toClone.gameObject);
+            field.name = field.name.Replace("_DistantProxy", "").Replace("(Clone)", "");
+            var proxyBody = field.GetComponent<ProxyBody>();
+            var minimapObj = field.AddComponent<T>();
+            Object.DestroyImmediate(proxyBody);
+            field.gameObject.SetActive(true);
+            MoveProxyToMap(field);
+            toClone.gameObject.SetActive(true);
+            return minimapObj;
+        }
+
         GameObject GetIslandProxyForMap(string path, string actualIslandPath)
         {
             var originalProxy = GameObject.Find(path);
@@ -501,10 +535,6 @@ namespace GeneralEnhancements
             var planet = minimap._playerRulesetDetector.GetPlanetoidRuleset();
             if (planet != current)
             {
-                if (fragments != null) {
-                    foreach (var f in fragments) f.enabled = false;
-                }
-
                 HideCurrent();
                 current = planet;
                 ShowCurrent();
@@ -619,16 +649,12 @@ namespace GeneralEnhancements
                 {
                     foreach (var f in fragments)
                     {
-                        if (f.detached || f.warped) f._initialized = false;
-
                         var fTF = f.transform;
                         if (!f.detached) continue;
 
-                        var realObj = f._realObjectTransform;
+                        var realObj = f.realTransform;
                         if (f.warped)
                         {
-                            foreach (var r in f._renderers) r.enabled = true;
-
                             fTF.localPosition = wh.InverseTransformPoint(realObj.position);
                             fTF.localRotation = wh.InverseTransformRotation(realObj.rotation);
                             fTF.localScale = realObj.lossyScale;
@@ -788,6 +814,119 @@ namespace GeneralEnhancements
             errorMapNames.Add(owrbName);
         }
     }
+
+    public class MinimapObject : MonoBehaviour
+    {
+        public Transform realTransform;
+
+        public GameObject realObject
+        {
+            get => realTransform.gameObject;
+            set => realTransform = value.transform;
+        }
+    }
+
+    public class MinimapBrittleHollow : MinimapObject
+    {
+        public MinimapBrittleHollowFragment[] fragments;
+
+        public void ResolveFragments()
+        {
+            foreach (var fragment in fragments)
+            {
+                fragment.brittleHollow = this;
+            }
+
+            if (realObject != null)
+            {
+                var realFragmentsForLookup = new List<DetachableFragment>(realObject.GetComponentsInChildren<DetachableFragment>());
+                foreach (var fragment in fragments)
+                {
+                    fragment.SetRealFragment(realFragmentsForLookup.FirstOrDefault(
+                        realFragment => fragment.realFragmentName.Equals(realFragment.gameObject.name)
+                    ));
+                }
+            }
+        }
+    }
+
+    public class MinimapBrittleHollowFragment : MinimapObject
+    {
+        public MinimapBrittleHollow brittleHollow;
+
+        public MinimapWhiteHole whiteHole;
+
+        public string realFragmentName;
+
+        public MeshRenderer[] renderers;
+
+        private DetachableFragment _originalFragment;
+
+        private bool _detached;
+
+        private bool _warped;
+
+        private bool _settled;
+
+        public bool detached => _detached;
+
+        public bool warped => _warped;
+
+        public bool settled => _settled;
+
+        public void Initialize(ProxyBrittleHollowFragment proxyBrittleHollowFragment)
+        {
+            realFragmentName = proxyBrittleHollowFragment.realFragmentName;
+            renderers = proxyBrittleHollowFragment._renderers;
+        }
+
+        public void SetRealFragment(DetachableFragment body)
+        {
+            realObject = body.gameObject;
+            _originalFragment = body;
+            _originalFragment.OnDetachFragment += OnFragmentDetached;
+            _originalFragment.OnChangeSector += OnFragmentWarped;
+            _originalFragment.OnComeToRest += OnFragmentCameToRest;
+        }
+
+        private void OnFragmentDetached(OWRigidbody fragmentBody, OWRigidbody attachedBody)
+        {
+            _detached = true;
+            transform.parent = brittleHollow.transform;
+        }
+
+        private void OnFragmentWarped(Sector newParentSector)
+        {
+            _warped = true;
+            foreach (var r in renderers) r.enabled = true;
+            transform.parent = whiteHole.transform;
+            transform.localPosition = Vector3.zero;
+            transform.rotation = realTransform.rotation;
+            transform.localScale = Vector3.one * 0.1f;
+        }
+
+        private void OnFragmentCameToRest(OWRigidbody anchorBody)
+        {
+            _settled = true;
+            transform.localPosition = whiteHole.realObject.transform.InverseTransformPoint(realTransform.position);
+            transform.rotation = realTransform.rotation;
+            transform.localScale = Vector3.one;
+        }
+    }
+
+    public class MinimapWhiteHole : MinimapObject
+    {
+        public MinimapBrittleHollowFragment[] fragments;
+
+        public void ResolveFragments()
+        {
+            foreach (var fragment in fragments)
+            {
+                fragment.whiteHole = this;
+            }
+        }
+    }
+
     public sealed class MinimapPlanetInfo
     {
         public string owrbName { get; private set; }
