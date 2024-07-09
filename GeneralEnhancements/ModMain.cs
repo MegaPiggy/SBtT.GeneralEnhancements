@@ -62,7 +62,8 @@ namespace GeneralEnhancements
         {
             currentScene = loadScene;
             if (loadScene == OWScene.TitleScreen) OnTitleScreenLoad();
-            else OnGameSceneLoaded();
+            else if (loadScene == OWScene.SolarSystem || loadScene == OWScene.EyeOfTheUniverse) OnGameSceneLoaded();
+            else OnOtherSceneLoaded();
         }
         void OnGameSceneLoaded()
         {
@@ -85,6 +86,13 @@ namespace GeneralEnhancements
             initialized = InitializeState.Created;
 
             Log.Print($"Loop {TimeLoop.GetLoopCount()}");
+        }
+        void OnOtherSceneLoaded()
+        {
+            initialized = InitializeState.Not;
+            features = new Feature[]
+            {
+            };
         }
         void OnTitleScreenLoad()
         {
