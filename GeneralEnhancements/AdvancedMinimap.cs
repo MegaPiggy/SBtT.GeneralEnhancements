@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Epic.OnlineServices;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -452,7 +453,7 @@ namespace GeneralEnhancements
                 Object.Destroy(casters[i]);
             }
 
-            GDIslands.Add(new GDIslandInfo(clone.transform, originalProxy.transform, actualIsland.transform));
+            GDIslands.Add(new GDIslandInfo(actualIslandPath, clone.transform, originalProxy.transform, actualIsland.transform));
 
             MoveProxyToMap(clone, true);
             var tf = clone.transform;
@@ -1075,19 +1076,25 @@ namespace GeneralEnhancements
             this.aboveMarkerMultiplier = 0.6f;
             this.uvLightUp = 2f;
         }
+
+        public override string ToString() => owrbName;
     }
 
     public sealed class GDIslandInfo
     {
+        public string owrbName { get; private set; }
         public Transform miniMapProxy { get; private set; }
         public Transform originalProxy { get; private set; } //Pivots are messed up
         public Transform actualIsland { get; private set; }
 
-        public GDIslandInfo(Transform miniMapProxy, Transform originalProxy, Transform actualIsland)
+        public GDIslandInfo(string owrbName, Transform miniMapProxy, Transform originalProxy, Transform actualIsland)
         {
+            this.owrbName = owrbName;
             this.miniMapProxy = miniMapProxy;
             this.originalProxy = originalProxy;
             this.actualIsland = actualIsland;
         }
+
+        public override string ToString() => owrbName;
     }
 }
