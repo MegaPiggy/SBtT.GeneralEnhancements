@@ -771,6 +771,8 @@ namespace GeneralEnhancements
 
         public static void AddOtherModMap(string owrbName, GameObject map, float radius)
         {
+            if (!IsReady) throw new GeneralEnhancementsException("Advanced Map feature is not ready!");
+
             var rndrs = map.GetComponentsInChildren<MeshRenderer>();
             foreach (var r in rndrs)
             {
@@ -795,6 +797,8 @@ namespace GeneralEnhancements
 
         public static void UpdateAdvancedMap(string owrbName, GameObject map)
         {
+            if (!IsReady) throw new GeneralEnhancementsException("Advanced Map feature is not ready!");
+
             for (int i = mapList.Count - 1; i >= 0; i--)
             {
                 if (mapList[i].owrbName == owrbName) mapList[i].mapRoot = map;
@@ -802,6 +806,8 @@ namespace GeneralEnhancements
         }
         public static void RemoveAdvancedMap(string owrbName)
         {
+            if (!IsReady) throw new GeneralEnhancementsException("Advanced Map feature is not ready!");
+
             for (int i = mapList.Count - 1; i >= 0; i--)
             {
                 if (mapList[i].owrbName == owrbName) mapList.RemoveAt(i);
