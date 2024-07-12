@@ -786,10 +786,8 @@ namespace GeneralEnhancements
         }
 
 
-        public static void AddOtherModMap(string owrbName, GameObject map, float radius)
+        public static void ChangeMaterialsForMinimap(GameObject map)
         {
-            if (!IsReady) throw new GeneralEnhancementsException("Advanced Map feature is not ready!");
-
             var rndrs = map.GetComponentsInChildren<MeshRenderer>();
             foreach (var r in rndrs)
             {
@@ -800,6 +798,13 @@ namespace GeneralEnhancements
                 for (int i = 0; i < mats.Length; i++) mats[i] = GEAssets.MinimapMat;
                 r.sharedMaterials = mats;
             }
+        }
+
+        public static void AddOtherModMap(string owrbName, GameObject map, float radius)
+        {
+            if (!IsReady) throw new GeneralEnhancementsException("Advanced Map feature is not ready!");
+
+            ChangeMaterialsForMinimap(map);
             var tf = map.transform;
             tf.parent = minimap._globeMeshTransform;
             tf.localPosition = Vector3.zero;
@@ -812,29 +817,127 @@ namespace GeneralEnhancements
             ResetMap();
         }
 
-        public static void UpdateAdvancedMap(string owrbName, GameObject map)
+        public static MinimapPlanetInfo GetAdvancedMapInfo(string owrbName)
         {
             if (!IsReady) throw new GeneralEnhancementsException("Advanced Map feature is not ready!");
 
             for (int i = mapList.Count - 1; i >= 0; i--)
             {
-                if (mapList[i].owrbName == owrbName) mapList[i].mapRoot = map;
+                if (mapList[i].owrbName == owrbName) return mapList[i];
             }
+
+            return null;
         }
+
+        public static GameObject GetAdvancedMap(string owrbName) => GetAdvancedMapInfo(owrbName)?.mapRoot;
+
+        public static void UpdateAdvancedMap(string owrbName, GameObject map, float radius = 0)
+        {
+            var mapInfo = GetAdvancedMapInfo(owrbName);
+
+            if (mapInfo == null)
+            {
+                AddOtherModMap(owrbName, map, radius);
+                return;
+            }
+
+            var mapRoot = mapInfo.mapRoot;
+
+            ChangeMaterialsForMinimap(map);
+            var tf = map.transform;
+            tf.parent = mapRoot.transform;
+            tf.localPosition = Vector3.zero;
+            tf.localRotation = Quaternion.identity;
+
+            if (radius != 0)
+            {
+                mapInfo.radius = radius;
+                mapInfo.undergroundRadius = -1f;
+            }
+
+            map.SetActive(true);
+
+            ResetMap();
+        }
+
+        public static void ReplaceAdvancedMap(string owrbName, GameObject map, float radius = 0)
+        {
+            var mapInfo = GetAdvancedMapInfo(owrbName);
+
+            if (mapInfo == null)
+            {
+                AddOtherModMap(owrbName, map, radius);
+                return;
+            }
+
+            ChangeMaterialsForMinimap(map);
+            var tf = map.transform;
+            tf.parent = minimap._globeMeshTransform;
+            tf.localPosition = Vector3.zero;
+            tf.localRotation = Quaternion.identity;
+
+            mapInfo.mapRoot.SetActive(false);
+            mapInfo.mapRoot = map;
+
+            if (radius != 0)
+            {
+                mapInfo.radius = radius;
+                mapInfo.undergroundRadius = -1f;
+            }
+
+            ResetMap();
+        }
+
         public static void RemoveAdvancedMap(string owrbName)
         {
             if (!IsReady) throw new GeneralEnhancementsException("Advanced Map feature is not ready!");
 
             for (int i = mapList.Count - 1; i >= 0; i--)
             {
-                if (mapList[i].owrbName == owrbName) mapList.RemoveAt(i);
+                if (mapList[i].owrbName == owrbName)
+                {
+                    if (mapList[i].mapRoot != null) mapList[i].mapRoot.SetActive(false);
+                    mapList.RemoveAt(i);
+                }
             }
 
             ResetMap();
         }
+
         public static void AddErrorMap(string owrbName)
         {
             errorMapNames.Add(owrbName);
+        }
+
+        public static GameObject MakeTornado()
+        {
+            var obj = Object.Instantiate(GEAssets.ProxyTornado);
+            obj.name = "Tornado";
+            var tf = obj.transform;
+            tf.localScale = Vector3.one;
+
+            var rndrs = obj.GetComponentsInChildren<MeshRenderer>();
+            foreach (var rndr in rndrs)
+            {
+                rndr.sharedMaterial = GEAssets.MinimapMat;
+                rndr.gameObject.layer = layerHUD;
+            }
+
+            return obj;
+        }
+
+        public static GameObject MakeHurricane()
+        {
+            var obj = Object.Instantiate(GEAssets.ProxyHurricane);
+            obj.name = "Hurricane";
+            obj.layer = layerHUD;
+            var tf = obj.transform;
+            tf.localScale = Vector3.one;
+
+            var rndr = obj.GetComponent<MeshRenderer>();
+            rndr.sharedMaterial = GEAssets.MinimapMat;
+
+            return obj;
         }
     }
 
