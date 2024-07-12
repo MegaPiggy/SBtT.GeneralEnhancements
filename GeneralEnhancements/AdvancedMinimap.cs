@@ -27,6 +27,10 @@ namespace GeneralEnhancements
         MeshRenderer sphereRenderer;
         Transform sphereTF;
         Transform playerMarker;
+        Transform probeMarker;
+        Transform shipMarkerPivot;
+        Transform shipMarkerOld;
+        Transform shipMarker;
 
         MeshRenderer[] currentRenderers;
         MeshRenderer arrowRenderer;
@@ -91,6 +95,11 @@ namespace GeneralEnhancements
                 dupArrowRenderer.color = new Color(0.7f, 0.4f, 0.1f);
             }
             arrowRenderer.sharedMaterial = dupArrowRenderer;
+
+            probeMarker = minimap.transform.Find("ProbeMarker");
+            shipMarkerPivot = minimap.transform.Find("ShipMarkerPivot");
+            shipMarkerOld = shipMarkerPivot.transform.Find("ShipMarker_OLD");
+            shipMarker = shipMarkerPivot.transform.Find("ShipMarker");
 
             layerHUD = LayerMask.NameToLayer("HeadsUpDisplay");
 
