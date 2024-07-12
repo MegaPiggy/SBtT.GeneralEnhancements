@@ -35,6 +35,7 @@ namespace GeneralEnhancements
 
             harmony.AddPrefix<Minimap>("GetLocalMapPosition", t, nameof(Patches.GetLocalMapPosition));
             harmony.AddPrefix<Minimap>("UpdateTrails", t, nameof(Patches.UpdateTrails));
+            harmony.AddPrefix<Minimap>("UpdateMarkers", t, nameof(Patches.UpdateMarkers));
 
             harmony.AddPrefix<PlayerResources>("StartRefillResources", t, nameof(Patches.StartRefillResources));
 
@@ -290,6 +291,13 @@ namespace GeneralEnhancements
                 Vector3 vec = __instance._lastPlayerTrailPos - __instance._playerMarkerTransform.localPosition;
                 __instance._lastPlayerTrailPos = __instance._playerMarkerTransform.localPosition + vec.normalized * 10f;
             }
+            return true;
+        }
+        public static bool UpdateMarkers(Minimap __instance)
+        {
+            // Disable ship and probe markers if not on same planetoid ruleset as player
+            __instance._shipMarkerTransform.gameObject.SetActive(__instance._shipRulesetDetector != null && __instance._shipRulesetDetector.GetPlanetoidRuleset() == __instance._playerRulesetDetector.GetPlanetoidRuleset());
+            __instance._probeMarkerTransform.gameObject.SetActive(__instance._probeRulesetDetector != null && __instance._probeRulesetDetector.GetPlanetoidRuleset() == __instance._playerRulesetDetector.GetPlanetoidRuleset());
             return true;
         }
 
