@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GeneralEnhancements
 {
-    public sealed class ModMain : ModBehaviour, IGeneralEnhancements
+    public sealed class ModMain : ModBehaviour
     {
         public static bool isDevelopmentVersion => false;
         public static bool IsLoaded { get; private set; }
@@ -16,6 +16,8 @@ namespace GeneralEnhancements
         {
             Not, Created, Initialized
         }
+
+        public override object GetApi() => new GeneralEnhancementsApi();
 
         DebugControls debugControls;
         Feature[] features;
@@ -145,11 +147,5 @@ namespace GeneralEnhancements
         }
 
         public static float Smooth(float t) => t * t * (3f - 2f * t);
-
-        public bool isReady => AdvancedMinimap.IsReady;
-        public void AddAdvancedMap(string owrbName, GameObject map, float radius = 250f) => AdvancedMinimap.AddOtherModMap(owrbName, map, radius);
-        public void UpdateAdvancedMap(string owrbName, GameObject map) => AdvancedMinimap.UpdateAdvancedMap(owrbName, map);
-        public void RemoveAdvancedMap(string owrbName) => AdvancedMinimap.RemoveAdvancedMap(owrbName);
-        public void AddErrorMap(string owrbName) => AdvancedMinimap.AddErrorMap(owrbName);
     }
 }
