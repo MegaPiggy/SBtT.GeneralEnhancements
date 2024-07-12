@@ -61,6 +61,7 @@ namespace GeneralEnhancements
             Log.Print($"Updaters LI: {sunLightParamUpdaters.Length}");
 
             atmoRoot = Object.Instantiate(atmoTH);
+            atmoRoot.name = "Atmosphere_IP_VisiblePlanet";
 
             atmoObj = atmoRoot.transform.Find("AtmoSphere").gameObject; //Can't be scaled
             //fogObj = atmoRoot.transform.Find("FogSphere").gameObject; //Can be scaled

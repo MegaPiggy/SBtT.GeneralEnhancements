@@ -77,6 +77,7 @@ namespace GeneralEnhancements
             playerMarkerArrow.localScale = new Vector3(35f, 35f, 35f); //Makes the marker spin on the spot instead of slightly infront
 
             aboveGroundMarker = GameObject.Instantiate(playerMarker.gameObject).transform;
+            aboveGroundMarker.name = "AboveGroundMarker";
             aboveGroundMarker.parent = minimap.transform;
             aboveGroundMarker.localScale = playerMarker.localScale;
             var aboveGroundMarkerArrow = aboveGroundMarker.Find("Arrow");
@@ -113,6 +114,7 @@ namespace GeneralEnhancements
             }
 
             errorText = GameObject.Instantiate(HUDModification.hudTextTemplate.gameObject);
+            errorText.name = "ErrorText";
             var t = errorText.GetComponent<Text>();
             t.text = "ERROR";
             t.color = new Color(1f, 0.5f, 0.4f, 1f);
@@ -252,15 +254,17 @@ namespace GeneralEnhancements
             if (GiantsDeepRoot != null)
             {
                 GDIslands = new List<GDIslandInfo>();
-                GetIslandProxyForMap("Proxy_GabbroIsland/GD_Gabbro_Isle_Proxy", "GabbroIsland_Body");
-                GetIslandProxyForMap("Proxy_StatueIsland/GD_Statue_Isle_Proxy", "StatueIsland_Body");
-                GetIslandProxyForMap("Proxy_ConstructionYard/GD_Constr_Isle_Proxy", "ConstructionYardIsland_Body");
-                GetIslandProxyForMap("Proxy_BrambleIsland/DB_Isle_Proxy", "BrambleIsland_Body");
-                var qi = GetIslandProxyForMap("Sector_QuantumIsland/Proxy_QuantumIsland", "QuantumIsland_Body");
+                GetIslandProxyForMap("Proxy_GabbroIsland/GD_Gabbro_Isle_Proxy", "GabbroIsland_Body", "Gabbro");
+                GetIslandProxyForMap("Proxy_StatueIsland/GD_Statue_Isle_Proxy", "StatueIsland_Body", "Statue");
+                GetIslandProxyForMap("Proxy_ConstructionYard/GD_Constr_Isle_Proxy", "ConstructionYardIsland_Body", "ConstructionYard");
+                GetIslandProxyForMap("Proxy_BrambleIsland/DB_Isle_Proxy", "BrambleIsland_Body", "Bramble");
+                var qi = GetIslandProxyForMap("Sector_QuantumIsland/Proxy_QuantumIsland", "QuantumIsland_Body", "Quantum");
                 if (qi != null)
                 {
                     GDQuantumIsland = qi.transform;
                     GDQuantumTower = GDQuantumIsland.Find("Proxy_GD_QuantumTower").gameObject;
+                    GDQuantumTower.name = "Tower";
+                    GDQuantumIsland.Find("Proxy_GD_QuantumIsland").name = "Island";
                 }
                 
                 var actualGD = GameObject.Find("GiantsDeep_Body");
@@ -271,6 +275,7 @@ namespace GeneralEnhancements
                     for (int i = 0; i < tornadoes.Length; i++)
                     {
                         var obj = Object.Instantiate(GEAssets.ProxyTornado);
+                        obj.name = "Tornado";
                         var tf = obj.transform;
                         tf.parent = GiantsDeepRoot.transform;
                         tf.localScale = Vector3.one;
@@ -287,6 +292,7 @@ namespace GeneralEnhancements
                 }
 
                 var northTornado = Object.Instantiate(GEAssets.ProxyHurricane);
+                northTornado.name = "Hurricane";
                 northTornado.layer = layerHUD;
                 northTornadoTF = northTornado.transform;
                 northTornadoTF.parent = GiantsDeepRoot.transform;
@@ -319,9 +325,10 @@ namespace GeneralEnhancements
 
                     //WhiteholeStation_Body
                     // /RFVolume_WhiteholeStation
-                    void CreateWHProxy(GameObject obj)
+                    void CreateWHProxy(GameObject obj, string name)
                     {
                         var newObj = GameObject.Instantiate(obj);
+                        newObj.name = name;
                         newObj.transform.parent = whiteHole.transform;
                         newObj.transform.localPosition = actualWH.transform.InverseTransformPoint(obj.transform.position);
                         newObj.transform.localRotation = actualWH.transform.InverseTransformRotation(obj.transform.rotation);
@@ -337,9 +344,9 @@ namespace GeneralEnhancements
                     }
 
                     var station = GameObject.Find("Sector_WhiteholeStation/Proxy_WhiteholeStation/Structure_NOM_WhiteHoleStation_Proxy");
-                    if (station != null) CreateWHProxy(station);
+                    if (station != null) CreateWHProxy(station, "Station");
                     var stationIce = GameObject.Find("Proxy_WhiteholeStationSuperstructure/Terrain_WH_StationIce_Proxy");
-                    if (stationIce != null) CreateWHProxy(stationIce);
+                    if (stationIce != null) CreateWHProxy(stationIce, "StationIce");
 
 
                     var rulesetObj = actualWH.transform.Find("Sector_WhiteHole/RulesetVolumes_WhiteHole");
@@ -422,7 +429,7 @@ namespace GeneralEnhancements
             return minimapObj;
         }
 
-        GameObject GetIslandProxyForMap(string path, string actualIslandPath)
+        GameObject GetIslandProxyForMap(string path, string actualIslandPath, string name)
         {
             var originalProxy = GameObject.Find(path);
             if (originalProxy == null) { Log.Print($"Proxy {path} was null"); return null; }
@@ -430,6 +437,7 @@ namespace GeneralEnhancements
             if (actualIsland == null) { Log.Print($"{actualIslandPath} was null"); return null; }
 
             var clone = Object.Instantiate(originalProxy.gameObject);
+            clone.name = name;
             var casters = clone.GetComponentsInChildren<ProxyShadowCaster>();
             for (int i = casters.Length - 1; i >= 0; i--) {
                 Object.Destroy(casters[i]);
