@@ -485,7 +485,7 @@ namespace GeneralEnhancements
                 rndr.gameObject.layer = layerHUD;
                 rndr.enabled = true;
 
-                if (proxy.name == "BlackHoleRenderer" || proxy.name == "Singularity") continue; //Leave black and white hole as is
+                if (proxy.name == "BlackHoleRenderer" || proxy.name == "WhiteHoleRenderer" || proxy.name == "Singularity") continue; //Leave black and white hole as is
 
                 if (rndr.sharedMaterials.Length == 1) rndr.sharedMaterial = GEAssets.MinimapMat;
                 else
