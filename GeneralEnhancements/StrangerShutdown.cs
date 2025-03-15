@@ -44,9 +44,9 @@ namespace GeneralEnhancements
             }
 
             ringWorldScreenController = GameObject.FindObjectOfType<RingWorldScreenController>();
-            ringWorldSunRenderer = GameObject.Find("Sector_RingInterior/Geometry_RingInterior/Structure_IP_ArtificialSun/ArtificialSun_Bulb").GetComponent<OWEmissiveRenderer>();
-            ringWorldSunLight = GameObject.Find("Sector_RingInterior/Lights_RingInterior/IP_SunLight").GetComponent<Light>();
-            ringWorldAmbientLight = GameObject.Find("Sector_RingInterior/Lights_RingInterior/AmbientLight_IP_Surface").GetComponent<Light>();
+            ringWorldSunRenderer = SearchUtilities.Find("Sector_RingInterior/Geometry_RingInterior/Structure_IP_ArtificialSun/ArtificialSun_Bulb").GetComponent<OWEmissiveRenderer>();
+            ringWorldSunLight = SearchUtilities.Find("Sector_RingInterior/Lights_RingInterior/IP_SunLight").GetComponent<Light>();
+            ringWorldAmbientLight = SearchUtilities.Find("Sector_RingInterior/Lights_RingInterior/AmbientLight_IP_Surface").GetComponent<Light>();
             fogController = ringWorldController.GetComponentInChildren<PlanetaryFogController>();
 
             lightMaxIntensity = ringWorldSunLight.intensity;
@@ -60,7 +60,7 @@ namespace GeneralEnhancements
             ambientSunColor = new Color(0.01f, 0.03f, 0.06f);
             sunlightSetColor = new Color(1f, 0.4f, 0.2f);
 
-            //var emberTwinAmbientLight = GameObject.Find("").GetComponent<Light>();
+            //var emberTwinAmbientLight = SearchUtilities.Find("").GetComponent<Light>();
 
             cloak = ringWorldController.GetComponentInChildren<CloakFieldController>();
             //GameObject.Instantiate(strangerLOD);

@@ -57,12 +57,14 @@ namespace GeneralEnhancements
             if (scene.name == "TitleScreen")
             {
                 currentScene = OWScene.TitleScreen;
+                ClearCaches();
                 OnTitleScreenLoad();
             }
         }
         void OnLoadScene(OWScene scene, OWScene loadScene)
         {
             currentScene = loadScene;
+            ClearCaches();
             if (loadScene == OWScene.TitleScreen) OnTitleScreenLoad();
             else if (loadScene == OWScene.SolarSystem || loadScene == OWScene.EyeOfTheUniverse) OnGameSceneLoaded();
             else OnOtherSceneLoaded();
@@ -98,11 +100,18 @@ namespace GeneralEnhancements
         }
         void OnTitleScreenLoad()
         {
-            var obj = GameObject.Find("OW_Logo_Anim/OW_Logo_Anim/WILDS");
+            var obj = SearchUtilities.Find("OW_Logo_Anim/OW_Logo_Anim/WILDS");
             if (obj != null) titleWILDSParent = obj.transform;
 
             titleScreenVariation = new TitleScreenVariation();
         }
+
+        private void ClearCaches()
+        {
+            // Caches of GameObjects must always be cleared
+            SearchUtilities.ClearCache();
+        }
+
         public static Transform titleWILDSParent { get; private set; }
 
         void Update() //I changed it, you happy John?

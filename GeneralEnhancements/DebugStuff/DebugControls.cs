@@ -116,7 +116,7 @@ namespace GeneralEnhancements.DebugStuff
 
         void TeleportToVesselWithAdvancedWarpCore()
         {
-            var vesselRB = GameObject.Find("DB_VesselDimension_Body").GetComponent<OWRigidbody>();
+            var vesselRB = SearchUtilities.Find("DB_VesselDimension_Body").GetComponent<OWRigidbody>();
             TeleportTo(vesselRB, new Vector3(330f, -100f, 170f));
             
             GivePlayerItem<WarpCoreItem>(x => x.GetWarpCoreType() == WarpCoreType.Vessel);

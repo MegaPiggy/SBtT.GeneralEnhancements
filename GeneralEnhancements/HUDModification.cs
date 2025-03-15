@@ -34,7 +34,7 @@ namespace GeneralEnhancements
             signalscope = Object.FindObjectOfType<Signalscope>();
             resources = Object.FindObjectOfType<PlayerResources>();
 
-            var uiCanvas = GameObject.Find("HelmetOnUI/UICanvas").transform;
+            var uiCanvas = SearchUtilities.Find("HelmetOnUI/UICanvas").transform;
             resourceGaugeRoot = uiCanvas.Find("GaugeGroup");
             healthNumber = resourceGaugeRoot.Find("Health").GetComponentInChildren<Text>(); //Unused but still there
             vitalsText = resourceGaugeRoot.Find("VitalsText").GetComponent<Text>();
@@ -103,7 +103,7 @@ namespace GeneralEnhancements
             waveformLineEnd = line.Find("BoundLine_Right").GetComponent<Image>();
             waveformLineOriginalColor = waveformLineStart.color;
 
-            var helmetRoot = GameObject.Find("HelmetRoot/HelmetMesh").transform;
+            var helmetRoot = SearchUtilities.Find("HelmetRoot/HelmetMesh").transform;
             helmetFrame = helmetRoot.Find("HUD_Helmet_v2").gameObject;
 
             helmetEffects = new Transform[] {
@@ -113,7 +113,7 @@ namespace GeneralEnhancements
                 helmetRoot.Find("HUD_HelmetCracks")
             };
 
-            reticule = GameObject.Find("Reticule/Image");
+            reticule = SearchUtilities.Find("Reticule/Image");
             //0.6 0.2 0.1 1
 
             OnSettingsUpdate();

@@ -47,8 +47,8 @@ namespace GeneralEnhancements
         {
             atmoRoot = null;
 
-            var atmoTH = GameObject.Find("TimberHearth_Body/Atmosphere_TH");
-            var gasPlanet = GameObject.Find("Sector_DreamWorld/Atmosphere_Dreamworld/Prefab_IP_VisiblePlanet");
+            var atmoTH = SearchUtilities.Find("TimberHearth_Body/Atmosphere_TH");
+            var gasPlanet = SearchUtilities.Find("Sector_DreamWorld/Atmosphere_Dreamworld/Prefab_IP_VisiblePlanet");
             if (atmoTH == null || gasPlanet == null) return;
             gasPlanetTF = gasPlanet.transform;
 

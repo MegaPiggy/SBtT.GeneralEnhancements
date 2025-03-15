@@ -16,7 +16,7 @@ namespace GeneralEnhancements
             /*
             if (Locator.GetQuantumMoon() == null) return;   //Tried to add Quantum Poem to QM similar to Alpha
 
-            var quantumPoemObj = GameObject.Find("Interactables_QuantumGrove/QuantumSaplings/Quantum_PoemTree");
+            var quantumPoemObj = SearchUtilities.Find("Interactables_QuantumGrove/QuantumSaplings/Quantum_PoemTree");
             if (quantumPoemObj != null)
             {
                 GameObject newObj = GameObject.Instantiate(quantumPoemObj);

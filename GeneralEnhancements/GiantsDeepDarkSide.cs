@@ -21,10 +21,10 @@ namespace GeneralEnhancements
         {
             if (Locator._giantsDeep == null) return;
 
-            clouds = GameObject.Find("GiantsDeep_Body/Sector_GD/Clouds_GD");
+            clouds = SearchUtilities.Find("GiantsDeep_Body/Sector_GD/Clouds_GD");
             cloudMats = clouds.transform.Find("CloudsBottomLayer_GD").GetComponent<TessellatedSphereRenderer>()._materials;
 
-            ambientLight = GameObject.Find("GiantsDeep_Body/AmbientLight_GD").GetComponent<Light>();
+            ambientLight = SearchUtilities.Find("GiantsDeep_Body/AmbientLight_GD").GetComponent<Light>();
             originalAmbientLightColor = ambientLight.color;
             originalAmbientLightIntensity = ambientLight.intensity;
 
@@ -41,7 +41,7 @@ namespace GeneralEnhancements
             if (Locator.GetSunTransform() == null) return;
             if (ambientLight == null)
             {
-                ambientLight = GameObject.Find("GiantsDeep_Body/AmbientLight_GD").GetComponent<Light>();
+                ambientLight = SearchUtilities.Find("GiantsDeep_Body/AmbientLight_GD").GetComponent<Light>();
                 if (ambientLight == null) return;
             }
 

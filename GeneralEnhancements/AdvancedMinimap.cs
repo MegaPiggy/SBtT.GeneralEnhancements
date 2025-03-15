@@ -75,7 +75,7 @@ namespace GeneralEnhancements
             current = null;
             IsReady = false;
 
-            minimap = GameObject.Find("SecondaryGroup/HUD_Minimap/Minimap_Root").GetComponent<Minimap>();
+            minimap = SearchUtilities.Find("SecondaryGroup/HUD_Minimap/Minimap_Root").GetComponent<Minimap>();
             playerMarker = minimap.transform.Find("PlayerMarker");
             var playerMarkerArrow = playerMarker.Find("Arrow");
             playerMarkerArrow.localPosition = new Vector3(0f, 0f, 0.38f);
@@ -116,7 +116,7 @@ namespace GeneralEnhancements
             {
                 sandET = Locator._hourglassTwinA.GetComponentInChildren<SandLevelController>();
                 sandAT = Locator._hourglassTwinB.GetComponentInChildren<SandLevelController>();
-                lavaHL = GameObject.Find("VolcanicMoon_Body/MoltenCore_VM").GetComponent<SandLevelController>();
+                lavaHL = SearchUtilities.Find("VolcanicMoon_Body/MoltenCore_VM").GetComponent<SandLevelController>();
             }
             catch
             {
@@ -248,7 +248,7 @@ namespace GeneralEnhancements
                     Clone(ref AshTwin, proxy);
                     sandColumnAshTwin = AshTwin.transform.Find("SandColumnRoot");
                     mapList.Add(new MinimapPlanetInfo("TowerTwin_Body", AshTwin, 0.003f, 170f, 30f, true));
-                    sandColumnScaleRoot = GameObject.Find("SandFunnel_Body/ScaleRoot").transform;
+                    sandColumnScaleRoot = SearchUtilities.Find("SandFunnel_Body/ScaleRoot").transform;
                 }
                 if (n.Contains("GiantsDeep"))
                 {
@@ -277,7 +277,7 @@ namespace GeneralEnhancements
                     GDQuantumIsland.Find("Proxy_GD_QuantumIsland").name = "Island";
                 }
                 
-                var actualGD = GameObject.Find("GiantsDeep_Body");
+                var actualGD = SearchUtilities.Find("GiantsDeep_Body");
                 if (actualGD != null)
                 {
                     var tornadoes = actualGD.GetComponentsInChildren<TornadoController>(true);
@@ -315,7 +315,7 @@ namespace GeneralEnhancements
 
             if (brittleHollow != null)
             {
-                var actualBH = GameObject.Find("BrittleHollow_Body");
+                var actualBH = SearchUtilities.Find("BrittleHollow_Body");
                 if (actualBH != null)
                 {
                     brittleHollow.realObject = actualBH;
@@ -326,7 +326,7 @@ namespace GeneralEnhancements
 
             if (whiteHole != null)
             {
-                var actualWH = GameObject.Find("WhiteHole_Body");
+                var actualWH = SearchUtilities.Find("WhiteHole_Body");
                 if (actualWH != null)
                 {
                     whiteHole.realObject = actualWH;
@@ -353,9 +353,9 @@ namespace GeneralEnhancements
                         newObj.layer = layerHUD;
                     }
 
-                    var station = GameObject.Find("Sector_WhiteholeStation/Proxy_WhiteholeStation/Structure_NOM_WhiteHoleStation_Proxy");
+                    var station = SearchUtilities.Find("Sector_WhiteholeStation/Proxy_WhiteholeStation/Structure_NOM_WhiteHoleStation_Proxy");
                     if (station != null) CreateWHProxy(station, "Station");
-                    var stationIce = GameObject.Find("Proxy_WhiteholeStationSuperstructure/Terrain_WH_StationIce_Proxy");
+                    var stationIce = SearchUtilities.Find("Proxy_WhiteholeStationSuperstructure/Terrain_WH_StationIce_Proxy");
                     if (stationIce != null) CreateWHProxy(stationIce, "StationIce");
 
 
@@ -441,9 +441,9 @@ namespace GeneralEnhancements
 
         GameObject GetIslandProxyForMap(string path, string actualIslandPath, string name)
         {
-            var originalProxy = GameObject.Find(path);
+            var originalProxy = SearchUtilities.Find(path);
             if (originalProxy == null) { Log.Print($"Proxy {path} was null"); return null; }
-            var actualIsland = GameObject.Find(actualIslandPath);
+            var actualIsland = SearchUtilities.Find(actualIslandPath);
             if (actualIsland == null) { Log.Print($"{actualIslandPath} was null"); return null; }
 
             var clone = Object.Instantiate(originalProxy.gameObject);

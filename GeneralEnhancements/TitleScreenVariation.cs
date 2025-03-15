@@ -29,11 +29,11 @@ namespace GeneralEnhancements
         public TitleScreenVariation()
         {
             //NH can mess with title screen, so check Riebeck is still there
-            riebeck = GameObject.Find("Traveller_HEA_Riebeck (1)");
+            riebeck = SearchUtilities.Find("Traveller_HEA_Riebeck (1)");
 
-            optionsObj = GameObject.Find("TitleMenu/OptionsCanvas/OptionsMenu-Panel");
+            optionsObj = SearchUtilities.Find("TitleMenu/OptionsCanvas/OptionsMenu-Panel");
 
-            var cam = GameObject.Find("Scene/Background/CameraSocket");
+            var cam = SearchUtilities.Find("Scene/Background/CameraSocket");
             if (cam == null) return;
 
             camera = cam.transform;
