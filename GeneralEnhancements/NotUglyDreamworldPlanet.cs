@@ -2,6 +2,7 @@
 
 namespace GeneralEnhancements
 {
+    // Streetlights named it this not me - MegaPiggy
     public sealed class NotUglyDreamworldPlanet : Feature
     {
         GameObject atmoObj;
