@@ -248,7 +248,8 @@ namespace GeneralEnhancements
                     Clone(ref AshTwin, proxy);
                     sandColumnAshTwin = AshTwin.transform.Find("SandColumnRoot");
                     mapList.Add(new MinimapPlanetInfo("TowerTwin_Body", AshTwin, 0.003f, 170f, 30f, true));
-                    sandColumnScaleRoot = SearchUtilities.Find("SandFunnel_Body/ScaleRoot").transform;
+                    var sandColumnScaleRootObject = SearchUtilities.Find("SandFunnel_Body/ScaleRoot");
+                    sandColumnScaleRoot = sandColumnScaleRootObject != null ? sandColumnScaleRootObject.transform : null;
                 }
                 if (n.Contains("GiantsDeep"))
                 {
@@ -698,7 +699,7 @@ namespace GeneralEnhancements
                 Vector3 vec = (sandET.transform.position - sandAT.transform.position);
                 Quaternion rot = Quaternion.LookRotation(vec, sandAT.transform.up);
                 sandColumnAshTwin.localRotation = Quaternion.Euler(0f, 90f, 0f) * sandAT.transform.InverseTransformRotation(rot);
-                sandColumnAshTwin.localScale = sandColumnScaleRoot.localScale;
+                sandColumnAshTwin.localScale = sandColumnScaleRoot != null ? sandColumnScaleRoot.localScale : Vector3.one;
             }
             if (mapRoot == EmberTwin)
             {

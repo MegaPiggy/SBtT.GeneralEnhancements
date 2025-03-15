@@ -48,8 +48,12 @@ namespace GeneralEnhancements
             if (!PlayerState.InGiantsDeep() || !Settings.GiantsDeepDarkSide)
             {
                 ambientLight.intensity = originalAmbientLightIntensity;
-                foreach (var m in cloudMats) {
-                    m.SetColor(propID_Color, Color.white);
+                if (cloudMats != null)
+                {
+                    foreach (var m in cloudMats)
+                    {
+                        m.SetColor(propID_Color, Color.white);
+                    }
                 }
                 return;
             }
