@@ -40,10 +40,37 @@ namespace GeneralEnhancements
         static Mesh originalRingsMesh;
         static Color originalRingsColor;
 
+        static OWRigidbody rootAccessPlanetSurface;
+        Position position = Position.Original;
+
         public NotUglyDreamworldPlanet()
         {
 
         }
+
+        public enum Position
+        {
+            Original,
+            Nicer,
+            ShroudedWoodlands,
+            StarlitCove,
+            EndlessCanyon,
+            SubmergedStructure
+        }
+
+        private void SetGasPlanetPositionAndRotation(Vector3 position, Vector3 euler) => SetGasPlanetPositionAndRotation(position, Quaternion.Euler(euler));
+
+        private void SetGasPlanetPositionAndRotation(Vector3 position, Quaternion rotation)
+        {
+            gasPlanetTF.localPosition = position;
+            gasPlanetTF.localRotation = rotation;
+            if (ModMain.HasRootAccess)
+            {
+                rootAccessPlanetSurface.SetPosition(gasPlanetTF.position);
+                rootAccessPlanetSurface.SetRotation(gasPlanetTF.rotation);
+            }
+        }
+
         public override void LateInitialize()
         {
             atmoRoot = null;
@@ -52,6 +79,8 @@ namespace GeneralEnhancements
             var gasPlanet = SearchUtilities.Find("Sector_DreamWorld/Atmosphere_Dreamworld/Prefab_IP_VisiblePlanet");
             if (atmoTH == null || gasPlanet == null) return;
             gasPlanetTF = gasPlanet.transform;
+
+            if (ModMain.HasRootAccess) rootAccessPlanetSurface = SearchUtilities.Find("PlanetSurface_Body").GetComponent<OWRigidbody>();
 
             originalPlanetPosition = gasPlanetTF.localPosition;
             originalPlanetRotation = gasPlanetTF.localRotation;
@@ -112,8 +141,8 @@ namespace GeneralEnhancements
             atmoRootTF.localScale = Vector3.one * 1.25f;
             atmoRoot.SetActive(false);
 
-            gasPlanetTF.localPosition = new Vector3(-1600f, 1320f, 333f);
-            gasPlanetTF.localRotation = Quaternion.Euler(0f, 0f, 10f);
+            position = Position.Nicer;
+            SetGasPlanetPositionAndRotation(new Vector3(-1600f, 1320f, 333f), new Vector3(0f, 0f, 10f));
 
             ambientLight = gasPlanetTF.Find("AmbientLight_IP").gameObject;
             sunLightPivot = gasPlanetTF.Find("SunLightPivot");
@@ -198,36 +227,36 @@ namespace GeneralEnhancements
                     string n = sector.name;
                     if (!n.Contains("DreamZone")) continue; //Joj Corbroc
 
-                    if (n.Contains("1"))
+                    if (n.EndsWith("1") && position != Position.ShroudedWoodlands)
                     {
-                        gasPlanetTF.localPosition = new Vector3(-1750f, 1320f, -400f);
-                        gasPlanetTF.localRotation = Quaternion.Euler(320f, 354f, 31f);
+                        position = Position.ShroudedWoodlands;
+                        SetGasPlanetPositionAndRotation(new Vector3(-1750f, 1320f, -400f), new Vector3(320f, 354f, 31f));
                         break;
                     }
-                    if (n.Contains("2"))
+                    if (n.EndsWith("2") && position != Position.StarlitCove)
                     {
-                        gasPlanetTF.localPosition = new Vector3(2950f, 1320f, -685f);
-                        gasPlanetTF.localRotation = Quaternion.Euler(320f, 91f, 98f);
+                        position = Position.StarlitCove;
+                        SetGasPlanetPositionAndRotation(new Vector3(2950f, 1320f, -685f), new Vector3(320f, 91f, 98f));
                         break;
                     }
-                    if (n.Contains("3"))
+                    if (n.EndsWith("3") && position != Position.EndlessCanyon)
                     {
-                        gasPlanetTF.localPosition = new Vector3(-370f, 2080f, -390f);
-                        gasPlanetTF.localRotation = Quaternion.Euler(333f, 320f, 340f);
+                        position = Position.EndlessCanyon;
+                        SetGasPlanetPositionAndRotation(new Vector3(-370f, 2080f, -390f), new Vector3(333f, 320f, 340f));
                         break;
                     }
-                    if (n.Contains("4"))
+                    if (n.EndsWith("4") && position != Position.SubmergedStructure)
                     {
-                        gasPlanetTF.localPosition = new Vector3(-1880f, 1080f, 0f);
-                        gasPlanetTF.localRotation = Quaternion.Euler(270f, 37f, 0f);
+                        position = Position.SubmergedStructure;
+                        SetGasPlanetPositionAndRotation(new Vector3(-1880f, 1080f, 0f), new Vector3(270f, 37f, 0f));
                         break;
                     }
                 }
             }
-            else
+            else if (position != Position.Original)
             {
-                gasPlanetTF.localPosition = originalPlanetPosition;
-                gasPlanetTF.localRotation = originalPlanetRotation;
+                position = Position.Original;
+                SetGasPlanetPositionAndRotation(originalPlanetPosition, originalPlanetRotation);
             }
 
             if (sunLightPivot != null)

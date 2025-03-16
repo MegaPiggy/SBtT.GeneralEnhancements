@@ -11,6 +11,7 @@ namespace GeneralEnhancements
     {
         public static bool isDevelopmentVersion => false;
         public static bool IsLoaded { get; private set; }
+        public static bool HasRootAccess { get; private set; }
         static InitializeState initialized = InitializeState.Not;
         public enum InitializeState
         {
@@ -41,6 +42,7 @@ namespace GeneralEnhancements
                 Log.Error("Debug activated. THIS MESSAGE SHOULD NOT APPEAR!");
                 debugControls = new DebugControls(ModHelper);
             }
+            HasRootAccess = ModHelper.Interaction.ModExists("2walker2.OWJam4ModProject");
 
             ModHelper.Events.Unity.FireOnNextUpdate(() => OnLoadScene(SceneManager.GetActiveScene()));
             LoadManager.OnCompleteSceneLoad += OnLoadScene;
