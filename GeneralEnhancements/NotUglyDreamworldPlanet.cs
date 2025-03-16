@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace GeneralEnhancements
 {
@@ -222,36 +223,63 @@ namespace GeneralEnhancements
             if (Settings.NicerRingedPlanet)
             {
                 var sectorsIn = Locator.GetPlayerSectorDetector()._sectorList;
-                foreach (var sector in sectorsIn)
+                var dreamZonesIn = sectorsIn.Where(sector => sector.name.Contains("DreamZone")); //Joj Corbroc
+                if (dreamZonesIn.Any())
                 {
-                    string n = sector.name;
-                    if (!n.Contains("DreamZone")) continue; //Joj Corbroc
+                    var currentDreamZone = dreamZonesIn.Count() > 1
+                        ? dreamZonesIn.LastOrDefault(dreamZone => !dreamZone.name.EndsWith("1")) // Root Access keeps 1 on
+                        : dreamZonesIn.FirstOrDefault();
+                    string n = currentDreamZone.name;
 
-                    if (n.EndsWith("1") && position != Position.ShroudedWoodlands)
+                    if (n.EndsWith("1"))
                     {
-                        position = Position.ShroudedWoodlands;
-                        SetGasPlanetPositionAndRotation(new Vector3(-1750f, 1320f, -400f), new Vector3(320f, 354f, 31f));
-                        break;
+                        if (position != Position.ShroudedWoodlands)
+                        {
+                            position = Position.ShroudedWoodlands;
+                            SetGasPlanetPositionAndRotation(new Vector3(-1750f, 1320f, -400f), new Vector3(320f, 354f, 31f));
+                        }
                     }
-                    if (n.EndsWith("2") && position != Position.StarlitCove)
+                    else if (n.EndsWith("2"))
                     {
-                        position = Position.StarlitCove;
-                        SetGasPlanetPositionAndRotation(new Vector3(2950f, 1320f, -685f), new Vector3(320f, 91f, 98f));
-                        break;
+                        if (position != Position.StarlitCove)
+                        {
+                            position = Position.StarlitCove;
+                            SetGasPlanetPositionAndRotation(new Vector3(2950f, 1320f, -685f), new Vector3(320f, 91f, 98f));
+                        }
                     }
-                    if (n.EndsWith("3") && position != Position.EndlessCanyon)
+                    else if (n.EndsWith("3"))
                     {
-                        position = Position.EndlessCanyon;
-                        SetGasPlanetPositionAndRotation(new Vector3(-370f, 2080f, -390f), new Vector3(333f, 320f, 340f));
-                        break;
+                        if (position != Position.EndlessCanyon)
+                        {
+                            position = Position.EndlessCanyon;
+                            SetGasPlanetPositionAndRotation(new Vector3(-370f, 2080f, -390f), new Vector3(333f, 320f, 340f));
+                        }
                     }
-                    if (n.EndsWith("4") && position != Position.SubmergedStructure)
+                    else if (n.EndsWith("4"))
                     {
-                        position = Position.SubmergedStructure;
-                        SetGasPlanetPositionAndRotation(new Vector3(-1880f, 1080f, 0f), new Vector3(270f, 37f, 0f));
-                        break;
+                        if (position != Position.SubmergedStructure)
+                        {
+                            position = Position.SubmergedStructure;
+                            SetGasPlanetPositionAndRotation(new Vector3(-1880f, 1080f, 0f), new Vector3(270f, 37f, 0f));
+                        }
                     }
+                    else
+                        goto nicer;
                 }
+                else
+                    goto nicer;
+
+                goto end;
+
+            nicer:
+                if (position != Position.Nicer)
+                {
+                    position = Position.Nicer;
+                    SetGasPlanetPositionAndRotation(new Vector3(-1600f, 1320f, 333f), new Vector3(0f, 0f, 10f));
+                }
+
+            end:
+                ;
             }
             else if (position != Position.Original)
             {
