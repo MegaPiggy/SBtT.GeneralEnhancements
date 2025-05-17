@@ -21,6 +21,15 @@ namespace GeneralEnhancements
             POV,
             POVLookDown,
             POVLookDownHigh,
+            
+            CampfireSide,
+            CampfireCloseUp,
+            AirborneTilted,
+            LowshotCenter,
+            OffCenter,
+            CircleCenter,
+            TreetopPeek,
+            PlanetSkyView,
         }
 
         public sealed class CamAngles
@@ -52,6 +61,15 @@ namespace GeneralEnhancements
                 { TitleCamAngle.POV, new CamAngles(-14.9544f, 94.1735f, 10.5f, 322.9446f, 153.1817f, 3.5272f) }, // POV Sitting at Camp
                 { TitleCamAngle.POVLookDown, new CamAngles(-14.9544f, 104.2826f, 10.5f, 42.6182f, 154.1637f, 3.5272f) }, // POV Looking Down Slightly
                 { TitleCamAngle.POVLookDownHigh, new CamAngles(-14.9908f, 126.0283f, 12.3909f, 60.0731f, 153.0911f, 3.5272f) }, // POV Looking Down from Higher Angle
+
+                { TitleCamAngle.CampfireSide, new CamAngles(-30.0f, 100.0f, 25.0f, 10.0f, 100.0f, 0f) }, // Campfire side look
+                { TitleCamAngle.CampfireCloseUp, new CamAngles(-13.2f, 95.1f, 8.5f, 5.0f, 140.0f, 0f) }, // Very close to the fire
+                { TitleCamAngle.AirborneTilted, new CamAngles(-30f, 130f, 30f, 60f, 120f, 45f) }, // High up, tilted like a drone shot
+                { TitleCamAngle.LowshotCenter, new CamAngles(-44.5f, 97.8f, 10.2f, 10f, 100f, 0f) }, // Low view on center with a slight tilt
+                { TitleCamAngle.OffCenter, new CamAngles(-60f, 105f, 0f, 5f, 70f, 0f) }, // Shows whole planet with campfire on horizon
+                { TitleCamAngle.CircleCenter, new CamAngles(-28.5f, 89f, 20f, 355f, 180f, 0f) }, // On ground like you are walking in a circle around the centerx
+                { TitleCamAngle.TreetopPeek, new CamAngles(10f, 115f, 20f, 20f, 240f, 0f) }, // Peeking from the treetops down at the fire
+                { TitleCamAngle.PlanetSkyView, new CamAngles(-25, 150, 0, 90f, 0f, 0f) }, // Straight up, showing planet from far above
             };
 
         public static GameObject optionsObj { get; private set; }
