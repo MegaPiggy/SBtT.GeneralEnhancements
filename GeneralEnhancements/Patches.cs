@@ -36,6 +36,7 @@ namespace GeneralEnhancements
             harmony.AddPrefix<Minimap>("GetLocalMapPosition", t, nameof(Patches.GetLocalMapPosition));
             harmony.AddPrefix<Minimap>("UpdateTrails", t, nameof(Patches.UpdateTrails));
             harmony.AddPrefix<Minimap>("UpdateMarkers", t, nameof(Patches.UpdateMarkers));
+            harmony.AddPrefix<Minimap>("OnPutOnSuit", t, nameof(Patches.KeepMinimapDisabled));
 
             harmony.AddPrefix<PlayerResources>("StartRefillResources", t, nameof(Patches.StartRefillResources));
 
@@ -299,6 +300,10 @@ namespace GeneralEnhancements
             __instance._shipMarkerTransform.gameObject.SetActive(__instance._shipRulesetDetector != null && __instance._shipRulesetDetector.GetPlanetoidRuleset() == __instance._playerRulesetDetector.GetPlanetoidRuleset());
             __instance._probeMarkerTransform.gameObject.SetActive(__instance._probeRulesetDetector != null && __instance._probeRulesetDetector.GetPlanetoidRuleset() == __instance._playerRulesetDetector.GetPlanetoidRuleset());
             return true;
+        }
+        public static bool KeepMinimapDisabled(Minimap __instance)
+        {
+            return Settings.Minimap != MinimapSetting.Disabled;
         }
 
         //--------------------------------------------- Green Fuel ---------------------------------------------//
